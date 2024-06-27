@@ -3,18 +3,15 @@ kind: Service
 metadata:
   name: backend-service
 spec:
+  ports:
+    - port: 3000
   selector:
     app: backend
-  ports:
-    - protocol: TCP
-      port: 3000
-      targetPort: 3000
-  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: backend-deployment
 spec:
   replicas: 1
   selector:
@@ -26,18 +23,7 @@ spec:
         app: backend
     spec:
       containers:
-      - name: backend
-        image: my-backend-image
-        ports:
-        - containerPort: 3000
-        env:
-        - name: DB_HOST
-          value: postgres-service
-        - name: DB_PORT
-          value: "5432"
-        - name: DB_NAME
-          value: database
-        - name: DB_USER
-          value: username
-        - name: DB_PASSWORD
-          value: password
+        - name: backend
+          image: my-backend-image
+          ports:
+            - containerPort: 3000
