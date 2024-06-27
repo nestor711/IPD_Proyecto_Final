@@ -1,34 +1,16 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const router = express.Router();
+const http = require('http');
+const { register, login } = require('../controllers/authController');
 
-router.post('/signup', async (req, res) => {
-  try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 12);
-    const user = await User.create({ username: req.body.username, password: hashedPassword });
-    res.status(201).json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+const server = http.createServer((req, res) => {
+  if (req.url === '/api/auth/register' && req.method === 'POST') {
+    return register(req, res);
+  } else if (req.url === '/api/auth/login' && req.method === 'POST') {
+    return login(req, res);
   }
+  res.statusCode = 404;
+  res.end('Not Found');
 });
 
-router.post('/login', async (req, res) => {
-  try {
-    const user = await User.findOne({ where: { username: req.body.username } });
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid username or password' });
-    }
-    const isMatch = await bcrypt.compare(req.body.password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid username or password' });
-    }
-    const token = jwt.sign({ userId: user.id }, 'your_jwt_secret', { expiresIn: '1h' });
-    res.status(200).json({ token });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+server.listen(3002, () => {
+  console.log('Auth server running on port 3002');
 });
-
-module.exports = router;

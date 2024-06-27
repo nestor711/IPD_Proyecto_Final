@@ -4,21 +4,21 @@ const sequelize = require('../config/database');
 const User = sequelize.define('User', {
   username: {
     type: DataTypes.STRING,
-    allowNull: false,
     unique: true,
+    allowNull: false
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   createdAt: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
+    defaultValue: DataTypes.NOW
   },
   updatedAt: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
+    defaultValue: DataTypes.NOW
+  }
 });
 
 module.exports = User;

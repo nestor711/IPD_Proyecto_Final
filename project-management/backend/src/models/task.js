@@ -1,38 +1,38 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Project = require('./project');
 
 const Task = sequelize.define('Task', {
   name: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   description: {
-    type: DataTypes.STRING,
-    allowNull: true,
+    type: DataTypes.STRING
   },
   completed: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false,
+    defaultValue: false
   },
   projectId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    references: {
+      model: Project,
+      key: 'id'
+    },
+    onDelete: 'CASCADE'
   },
   createdAt: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
+    defaultValue: DataTypes.NOW
   },
   updatedAt: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
+    defaultValue: DataTypes.NOW
+  }
 });
 
-Task.associate = (models) => {
-  Task.belongsTo(models.Project, {
-    foreignKey: 'projectId',
-    as: 'project',
-  });
-};
+Project.hasMany(Task, { onDelete: 'CASCADE' });
+Task.belongsTo(Project);
 
 module.exports = Task;

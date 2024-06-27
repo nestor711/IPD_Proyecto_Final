@@ -1,26 +1,34 @@
-const express = require('express');
-const Task = require('../models/task');
-const router = express.Router();
+const http = require('http');
+const { createTask, getAllTasks, getTaskById, updateTask, deleteTask } = require('../controllers/taskController');
 
-// CRUD routes for tasks
-router.post('/', async (req, res) => {
-  try {
-    const task = await Task.create(req.body);
-    res.status(201).json(task);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+const server = http.createServer((req, res) => {
+  if (req.url.startsWith('/api/tasks') && req.method === 'POST') {
+    return createTask(req, res);
+  } else if (req.url.startsWith('/api/tasks') && req.method === 'GET') {
+    const urlParts = req.url.split('/');
+    if (urlParts.length === 3) {
+      return getAllTasks(req, res);
+    } else if (urlParts.length === 4) {
+      req.params = { id: urlParts[3] };
+      return getTaskById(req, res);
+    }
+  } else if (req.url.startsWith('/api/tasks') && req.method === 'PUT') {
+    const urlParts = req.url.split('/');
+    if (urlParts.length === 4) {
+      req.params = { id: urlParts[3] };
+      return updateTask(req, res);
+    }
+  } else if (req.url.startsWith('/api/tasks') && req.method === 'DELETE') {
+    const urlParts = req.url.split('/');
+    if (urlParts.length === 4) {
+      req.params = { id: urlParts[3] };
+      return deleteTask(req, res);
+    }
   }
+  res.statusCode = 404;
+  res.end('Not Found');
 });
 
-router.get('/', async (req, res) => {
-  try {
-    const tasks = await Task.findAll();
-    res.status(200).json(tasks);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+server.listen(3001, () => {
+  console.log('Task server running on port 3001');
 });
-
-// Additional CRUD routes (put, delete, get by id) here
-
-module.exports = router;

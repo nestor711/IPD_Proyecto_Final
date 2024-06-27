@@ -1,4 +1,4 @@
-const { createLogger, format, transports } = require('winston');
+const { createLogger, transports, format } = require('winston');
 
 const logger = createLogger({
   level: 'info',
@@ -7,6 +7,7 @@ const logger = createLogger({
     format.json()
   ),
   transports: [
+    new transports.Console(),
     new transports.File({ filename: 'app.log' })
   ]
 });

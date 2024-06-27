@@ -3,64 +3,69 @@ const Task = require('../models/task');
 const logger = require('../logger');
 
 // Crear un nuevo proyecto
-exports.createProject = async (req, res) => {
+async function createProject(req, res) {
   try {
-    const project = await Project.create(req.body);
+    const { name, description } = req.body;
+    const project = await Project.create({ name, description });
     logger.info(`Project created: ${project.id}`);
     res.status(201).json(project);
   } catch (error) {
     logger.error('Error creating project', error);
     res.status(500).json({ message: 'Error creating project' });
   }
-};
+}
 
 // Obtener todos los proyectos
-exports.getAllProjects = async (req, res) => {
+async function getAllProjects(req, res) {
   try {
     const projects = await Project.findAll();
     res.status(200).json(projects);
   } catch (error) {
-    logger.error('Error fetching projects', error);
-    res.status(500).json({ message: 'Error fetching projects' });
+    logger.error('Error getting projects', error);
+    res.status(500).json({ message: 'Error getting projects' });
   }
-};
+}
 
 // Obtener un proyecto por ID
-exports.getProjectById = async (req, res) => {
+async function getProjectById(req, res) {
   try {
-    const project = await Project.findByPk(req.params.id, {
-      include: [Task]
-    });
+    const { id } = req.params;
+    const project = await Project.findByPk(id, { include: Task });
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
     res.status(200).json(project);
   } catch (error) {
-    logger.error('Error fetching project', error);
-    res.status(500).json({ message: 'Error fetching project' });
+    logger.error('Error getting project', error);
+    res.status(500).json({ message: 'Error getting project' });
   }
-};
+}
 
 // Actualizar un proyecto
-exports.updateProject = async (req, res) => {
+async function updateProject(req, res) {
   try {
-    const project = await Project.findByPk(req.params.id);
+    const { id } = req.params;
+    const { name, description } = req.body;
+    const project = await Project.findByPk(id);
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
-    await project.update(req.body);
+    project.name = name;
+    project.description = description;
+    await project.save();
     logger.info(`Project updated: ${project.id}`);
     res.status(200).json(project);
   } catch (error) {
     logger.error('Error updating project', error);
     res.status(500).json({ message: 'Error updating project' });
   }
-};
+}
 
-// Eliminar un proyecto (y sus tareas)
-exports.deleteProject = async (req, res) => {
+// Borrar un proyecto
+async function deleteProject(req, res) {
   try {
-    const project = await Project.findByPk(req.params.id);
+    const { id } = req.params;
+    const project = await Project.findByPk(id);
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
@@ -71,4 +76,6 @@ exports.deleteProject = async (req, res) => {
     logger.error('Error deleting project', error);
     res.status(500).json({ message: 'Error deleting project' });
   }
-};
+}
+
+module.exports = { createProject, getAllProjects, getProjectById, updateProject, deleteProject };
