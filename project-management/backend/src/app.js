@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const sequelize = require('./config/database'); // Archivo de configuración de Sequelize
+const sequelize = require('./config/database'); 
 const projectRoutes = require('./routes/project');
 const taskRoutes = require('./routes/task');
 const authRoutes = require('./routes/auth');
@@ -14,7 +14,7 @@ app.use('/api/auth', authRoutes);
 
 const PORT = process.env.PORT || 3000;
 
-sequelize.sync()
+sequelize.sync({ force: true }) // Use { force: true } for development to drop tables if they exist
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);

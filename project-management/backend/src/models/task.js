@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Project = require('./project');
+const Project = require('./project'); // Importar el modelo Project
 
 const Task = sequelize.define('Task', {
   name: {
@@ -15,7 +15,9 @@ const Task = sequelize.define('Task', {
   }
 });
 
-Task.belongsTo(Project, { onDelete: 'CASCADE' });
-Project.hasMany(Task);
+// Establecer relación con Project
+Task.belongsTo(Project, {
+  onDelete: 'CASCADE' // Configurar borrado en cascada
+});
 
 module.exports = Task;
