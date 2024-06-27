@@ -2,9 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: project-management
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: backend
@@ -15,6 +14,22 @@ spec:
     spec:
       containers:
       - name: backend
-        image: your-docker-repo/backend:latest
+        image: backend:latest
         ports:
-        - containerPort: 3001
+        - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          value: postgres://username:password@postgres:5432/database
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer
