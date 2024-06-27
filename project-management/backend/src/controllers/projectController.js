@@ -1,32 +1,15 @@
-const pool = require('../models/database');
+const logger = require('../logger');
 
-const getProjects = async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM projects');
-        res.json(result.rows);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+// Dentro de tus controladores, por ejemplo, en el método para crear un proyecto:
+exports.createProject = async (req, res) => {
+  try {
+    const project = await Project.create(req.body);
+    logger.info(`Project created: ${project.id}`);
+    res.status(201).json(project);
+  } catch (error) {
+    logger.error('Error creating project', error);
+    res.status(500).json({ message: 'Error creating project' });
+  }
 };
 
-const createProject = async (req, res) => {
-    const { name, description } = req.body;
-    try {
-        const result = await pool.query(
-            'INSERT INTO projects (name, description) VALUES ($1, $2) RETURNING *',
-            [name, description]
-        );
-        res.json(result.rows[0]);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-// Define otros métodos como updateProject, deleteProject, etc.
-
-module.exports = {
-    getProjects,
-    createProject,
-    // Exporta otros métodos aquí
-};
-
+// Similarmente para update, delete y otros métodos CRUD.
