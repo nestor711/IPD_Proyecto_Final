@@ -1,56 +1,74 @@
-const pool = require('../models/database');
-
-// Obtener todas las tareas
-const getTasks = async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM tasks');
-        res.json(result.rows);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+const Task = require('../models/task');
+const logger = require('../logger');
 
 // Crear una nueva tarea
-const createTask = async (req, res) => {
-    const { name, projectId, description, status } = req.body;
-    try {
-        const result = await pool.query(
-            'INSERT INTO tasks (name, project_id, description, status) VALUES ($1, $2, $3, $4) RETURNING *',
-            [name, projectId, description, status]
-        );
-        res.json(result.rows[0]);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+exports.createTask = async (req, res) => {
+  try {
+    const task = await Task.create({
+      ...req.body,
+      projectId: req.params.projectId
+    });
+    logger.info(`Task created: ${task.id}`);
+    res.status(201).json(task);
+  } catch (error) {
+    logger.error('Error creating task', error);
+    res.status(500).json({ message: 'Error creating task' });
+  }
 };
 
-// Actualizar una tarea existente
-const updateTask = async (req, res) => {
-    const { id } = req.params;
-    const { name, projectId, description, status } = req.body;
-    try {
-        const result = await pool.query(
-            'UPDATE tasks SET name = $1, project_id = $2, description = $3, status = $4 WHERE id = $5 RETURNING *',
-            [name, projectId, description, status, id]
-        );
-        res.json(result.rows[0]);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+// Obtener todas las tareas de un proyecto
+exports.getTasksByProjectId = async (req, res) => {
+  try {
+    const tasks = await Task.findAll({ where: { projectId: req.params.projectId } });
+    res.status(200).json(tasks);
+  } catch (error) {
+    logger.error('Error fetching tasks', error);
+    res.status(500).json({ message: 'Error fetching tasks' });
+  }
+};
+
+// Obtener una tarea por ID
+exports.getTaskById = async (req, res) => {
+  try {
+    const task = await Task.findByPk(req.params.id);
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
     }
+    res.status(200).json(task);
+  } catch (error) {
+    logger.error('Error fetching task', error);
+    res.status(500).json({ message: 'Error fetching task' });
+  }
+};
+
+// Actualizar una tarea
+exports.updateTask = async (req, res) => {
+  try {
+    const task = await Task.findByPk(req.params.id);
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    await task.update(req.body);
+    logger.info(`Task updated: ${task.id}`);
+    res.status(200).json(task);
+  } catch (error) {
+    logger.error('Error updating task', error);
+    res.status(500).json({ message: 'Error updating task' });
+  }
 };
 
 // Eliminar una tarea
-const deleteTask = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const result = await pool.query(
-            'DELETE FROM tasks WHERE id = $1 RETURNING *',
-            [id]
-        );
-        res.json(result.rows[0]);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+exports.deleteTask = async (req, res) => {
+  try {
+    const task = await Task.findByPk(req.params.id);
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
     }
+    await task.destroy();
+    logger.info(`Task deleted: ${task.id}`);
+    res.status(204).send();
+  } catch (error) {
+    logger.error('Error deleting task', error);
+    res.status(500).json({ message: 'Error deleting task' });
+  }
 };
-
-module.exports = { getTasks, createTask, updateTask, deleteTask };

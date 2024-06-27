@@ -1,26 +1,31 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Task = require('./task'); // Importar el modelo Task
 
 const Project = sequelize.define('Project', {
   name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   description: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: true,
   },
-  startDate: {
-    type: DataTypes.DATE
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
   },
-  endDate: {
-    type: DataTypes.DATE
-  }
+  updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
 });
 
-// Establecer relación con Task
-Project.hasMany(Task, {
-  onDelete: 'CASCADE' // Configurar borrado en cascada
-});
+Project.associate = (models) => {
+  Project.hasMany(models.Task, {
+    foreignKey: 'projectId',
+    as: 'tasks',
+    onDelete: 'CASCADE', // Esto asegura el borrado en cascada
+  });
+};
 
 module.exports = Project;
