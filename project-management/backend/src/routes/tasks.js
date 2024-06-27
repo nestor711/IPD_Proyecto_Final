@@ -1,11 +1,26 @@
 const express = require('express');
-const { getTasks, createTask, updateTask, deleteTask } = require('../controllers/taskController');
+const Task = require('../models/task');
 const router = express.Router();
 
-// Rutas para tareas
-router.get('/', getTasks);         // Obtener todas las tareas
-router.post('/', createTask);      // Crear una nueva tarea
-router.put('/:id', updateTask);    // Actualizar una tarea existente
-router.delete('/:id', deleteTask); // Eliminar una tarea
+// CRUD routes for tasks
+router.post('/', async (req, res) => {
+  try {
+    const task = await Task.create(req.body);
+    res.status(201).json(task);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/', async (req, res) => {
+  try {
+    const tasks = await Task.findAll();
+    res.status(200).json(tasks);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Additional CRUD routes (put, delete, get by id) here
 
 module.exports = router;
