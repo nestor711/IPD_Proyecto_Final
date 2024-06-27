@@ -1,26 +1,12 @@
 const express = require('express');
-const Project = require('../models/project');
+const { createProject, getAllProjects, getProjectById, updateProject, deleteProject } = require('../controllers/projectController');
+
 const router = express.Router();
 
-// CRUD routes for projects
-router.post('/', async (req, res) => {
-  try {
-    const project = await Project.create(req.body);
-    res.status(201).json(project);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-router.get('/', async (req, res) => {
-  try {
-    const projects = await Project.findAll();
-    res.status(200).json(projects);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Additional CRUD routes (put, delete, get by id) here
+router.post('/', createProject);
+router.get('/', getAllProjects);
+router.get('/:id', getProjectById);
+router.put('/:id', updateProject);
+router.delete('/:id', deleteProject);
 
 module.exports = router;

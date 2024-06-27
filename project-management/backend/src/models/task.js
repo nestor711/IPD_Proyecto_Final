@@ -10,12 +10,29 @@ const Task = sequelize.define('Task', {
   description: {
     type: DataTypes.STRING
   },
-  dueDate: {
-    type: DataTypes.DATE
+  completed: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  projectId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Project,
+      key: 'id'
+    },
+    onDelete: 'CASCADE'
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
 });
 
-Task.belongsTo(Project, { onDelete: 'CASCADE' });
-Project.hasMany(Task);
+Project.hasMany(Task, { onDelete: 'CASCADE' });
+Task.belongsTo(Project);
 
 module.exports = Task;

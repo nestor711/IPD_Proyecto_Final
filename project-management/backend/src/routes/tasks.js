@@ -1,26 +1,12 @@
 const express = require('express');
-const Task = require('../models/task');
+const { createTask, getAllTasks, getTaskById, updateTask, deleteTask } = require('../controllers/taskController');
+
 const router = express.Router();
 
-// CRUD routes for tasks
-router.post('/', async (req, res) => {
-  try {
-    const task = await Task.create(req.body);
-    res.status(201).json(task);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-router.get('/', async (req, res) => {
-  try {
-    const tasks = await Task.findAll();
-    res.status(200).json(tasks);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Additional CRUD routes (put, delete, get by id) here
+router.post('/', createTask);
+router.get('/', getAllTasks);
+router.get('/:id', getTaskById);
+router.put('/:id', updateTask);
+router.delete('/:id', deleteTask);
 
 module.exports = router;

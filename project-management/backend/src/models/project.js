@@ -9,11 +9,13 @@ const Project = sequelize.define('Project', {
   description: {
     type: DataTypes.STRING
   },
-  startDate: {
-    type: DataTypes.DATE
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   },
-  endDate: {
-    type: DataTypes.DATE
+  updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
 });
 
