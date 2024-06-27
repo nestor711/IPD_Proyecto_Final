@@ -2,13 +2,18 @@ const sequelize = require('./config/database');
 const Project = require('./models/project');
 const Task = require('./models/task');
 const User = require('./models/user');
+const bcrypt = require('bcryptjs');
 const logger = require('./logger');
 
 async function initDB() {
   try {
     await sequelize.sync({ force: true });
 
-    // Crear datos de ejemplo
+    // Crear usuario admin para el login
+    const hashedPassword = await bcrypt.hash('password', 10);
+    await User.create({ username: 'admin', password: hashedPassword });
+
+    // Crear datos de ejemplo de proyectos y tareas
     for (let i = 1; i <= 5; i++) {
       const project = await Project.create({
         name: `Project ${i}`,
