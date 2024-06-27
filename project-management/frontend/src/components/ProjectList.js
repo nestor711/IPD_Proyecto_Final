@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { deleteProject } from '../api';
 
-const ProjectList = () => {
-    const [projects, setProjects] = useState([]);
+const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
+  const handleDelete = async (projectId) => {
+    await deleteProject(projectId);
+    onDeleteProject();
+  };
 
-    useEffect(() => {
-        axios.get('/api/projects')
-            .then(response => setProjects(response.data))
-            .catch(error => console.error(error));
-    }, []);
-
-    return (
-        <div>
-            <h1>Projects</h1>
-            <ul>
-                {projects.map(project => (
-                    <li key={project.id}>{project.name}</li>
-                ))}
-            </ul>
-        </div>
-    );
+  return (
+    <ul>
+      {projects.map((project) => (
+        <li key={project.id}>
+          {project.name}
+          <button onClick={() => onSelectProject(project)}>View Tasks</button>
+          <button onClick={() => handleDelete(project.id)}>Delete</button>
+        </li>
+      ))}
+    </ul>
+  );
 };
 
 export default ProjectList;
