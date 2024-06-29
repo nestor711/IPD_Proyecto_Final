@@ -13,8 +13,8 @@ services:
       - app-network
 
   backend:
-    build:
-      context: ../backend
+    image: project_backend
+
     ports:
       - "3000:3000"
     environment:
@@ -29,8 +29,7 @@ services:
       - app-network
 
   frontend:
-    build:
-      context: ../frontend
+    image: project_frontend
     ports:
       - "80:80"
     networks:
