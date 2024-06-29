@@ -1,7 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 
-echo "Running database initialization script..."
+# Esperar a que el servicio de Postgres esté disponible
+until nc -z -v -w30 $DB_HOST 5432
+do
+  echo "Waiting for database connection..."
+  sleep 1
+done
 
-node /app/initDB.js
+# Ejecutar el script de inicialización de la base de datos
+node /app/src/initDB.js
 
-echo "Database initialization script finished."
+# Indicar que el script ha terminado
+echo "Database initialized"
