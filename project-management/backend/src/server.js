@@ -1,11 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { sequelize } = require('./models');
+const sequelize = require('./config/database');
 const winston = require('./logger');
 const authRoutes = require('./routes/auth');
-const projectRoutes = require('./routes/project');
-const taskRoutes = require('./routes/task');
+const projectRoutes = require('./routes/projects');
+const taskRoutes = require('./routes/tasks');
 require('dotenv').config();
 
 const app = express();
