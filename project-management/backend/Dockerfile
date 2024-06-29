@@ -2,21 +2,22 @@ FROM node:14
 
 WORKDIR /app
 
-# Copia los archivos de package y realiza la instalación de dependencias
 COPY package*.json ./
 RUN npm install
 
-# Copia todos los archivos necesarios
-COPY src /app/src
+COPY . .
+
+# Copiar y dar permisos de ejecución al script de inicialización
 COPY scripts/initDB.sh /usr/local/bin/initDB.sh
-
-# Da permisos de ejecución al script de inicialización
 RUN chmod +x /usr/local/bin/initDB.sh
-
-# Depuración: Listar los archivos en el directorio /app/src
-RUN ls -la /app/src
 
 EXPOSE 3000
 
-# Ejecuta el script de inicialización y luego inicia el servidor
-CMD ["sh", "-c", "/usr/local/bin/initDB.sh && node src/server.js"]
+# Crear un script de inicio
+RUN echo '#!/bin/sh\ncd /app/src && node server.js &\nsleep 5\n/usr/local/bin/initDB.sh\nwait' > /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Verificar que los scripts existen y tienen permisos de ejecución
+RUN ls -l /usr/local/bin/initDB.sh /usr/local/bin/start.sh
+
+CMD ["/usr/local/bin/start.sh"]
