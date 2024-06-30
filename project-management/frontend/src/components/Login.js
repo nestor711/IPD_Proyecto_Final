@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const API_URL = '/api'; 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -8,9 +9,11 @@ const Login = ({ onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', { username, password });
+      const response = await axios.post(`${API_URL}/auth/login`, { username, password });
       const token = response.data.token;
-      localStorage.setItem('token', token);
+      // Usa sessionStorage en lugar de localStorage para mayor seguridad
+      sessionStorage.setItem('token', token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       onLogin();
     } catch (error) {
       console.error('Error logging in', error);

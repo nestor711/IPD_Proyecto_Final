@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = '/api';
 
 export const fetchProjects = () => axios.get(`${API_URL}/projects`);
 export const createProject = (project) => axios.post(`${API_URL}/projects`, project);
