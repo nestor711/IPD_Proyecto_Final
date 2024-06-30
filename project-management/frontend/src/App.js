@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import ProjectList from './components/ProjectList';
 import ProjectForm from './components/ProjectForm';
 import TaskList from './components/TaskList';
@@ -28,32 +29,57 @@ function App() {
     setTasks(response.data);
   };
 
+  const PrivateRoute = ({ children, ...rest }) => {
+    return (
+      <Route
+        {...rest}
+        render={({ location }) =>
+          isLoggedIn ? (
+            children
+          ) : (
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: { from: location }
+              }}
+            />
+          )
+        }
+      />
+    );
+  };
+
   return (
-    <div>
-      {!isLoggedIn ? (
-        <Login onLogin={() => setIsLoggedIn(true)} />
-      ) : (
-        <div>
-          <h1>Project Management</h1>
-          <ProjectForm onAddProject={loadProjects} />
-          <ProjectList
-            projects={projects}
-            onSelectProject={(project) => {
-              setSelectedProject(project);
-              loadTasks(project.id);
-            }}
-            onDeleteProject={loadProjects}
-          />
-          {selectedProject && (
+    <Router>
+      <div>
+        <Switch>
+          <Route path="/login">
+            {isLoggedIn ? <Redirect to="/" /> : <Login onLogin={() => setIsLoggedIn(true)} />}
+          </Route>
+          <PrivateRoute path="/">
             <div>
-              <h2>Tasks for {selectedProject.name}</h2>
-              <TaskForm projectId={selectedProject.id} onAddTask={() => loadTasks(selectedProject.id)} />
-              <TaskList tasks={tasks} onDeleteTask={() => loadTasks(selectedProject.id)} />
+              <h1>Project Management</h1>
+              <ProjectForm onAddProject={loadProjects} />
+              <ProjectList
+                projects={projects}
+                onSelectProject={(project) => {
+                  setSelectedProject(project);
+                  loadTasks(project.id);
+                }}
+                onDeleteProject={loadProjects}
+              />
+              {selectedProject && (
+                <div>
+                  <h2>Tasks for {selectedProject.name}</h2>
+                  <TaskForm projectId={selectedProject.id} onAddTask={() => loadTasks(selectedProject.id)} />
+                  <TaskList tasks={tasks} onDeleteTask={() => loadTasks(selectedProject.id)} />
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      )}
-    </div>
+          </PrivateRoute>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
