@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node src/server.js",
-    "init-db": "node scripts/initDB.js"
+    "init-db": "node scripts/initDB.js",
+    "start-and-init": "npm run init-db && npm start"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
