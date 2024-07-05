@@ -7,70 +7,70 @@ const API_URL = '/api';
 
 const LoginForm = ({ username, password, setUsername, setPassword, handleSubmit }) => (
   <form onSubmit={handleSubmit}>
-    <h1>Sign In</h1>
+    <h1>Iniciar Sesión</h1>
     <div className="social-icons">
       <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-linkedin-in"></i></a>
     </div>
-    <span>or use your username for login</span>
+    <span>o utiliza tu nombre de usuario para ingresar</span>
     <input
       type="text"
-      placeholder="Username"
+      placeholder="Nombre de Usuario"
       value={username}
       onChange={(e) => setUsername(e.target.value)}
-      aria-label="Username"
+      aria-label="Nombre de Usuario"
       required
     />
     <input
       type="password"
-      placeholder="Password"
+      placeholder="Contraseña"
       value={password}
       onChange={(e) => setPassword(e.target.value)}
-      aria-label="Password"
+      aria-label="Contraseña"
       required
     />
-    <a href="#">Forget Your Password?</a>
-    <button type="submit">Sign In</button>
+    <a href="#">¿Olvidaste tu contraseña?</a>
+    <button type="submit">Ingresar</button>
   </form>
 );
 
 const RegisterForm = ({ name, username, password, setName, setUsername, setPassword, handleSubmit }) => (
   <form onSubmit={handleSubmit}>
-    <h1>Create Account</h1>
+    <h1>Crear Cuenta</h1>
     <div className="social-icons">
       <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-linkedin-in"></i></a>
     </div>
-    <span>or use your username for registration</span>
+    <span>o utiliza tu nombre de usuario para registrarte</span>
     <input
       type="text"
-      placeholder="Name"
+      placeholder="Nombre"
       value={name}
       onChange={(e) => setName(e.target.value)}
-      aria-label="Name"
+      aria-label="Nombre"
       required
     />
     <input
       type="text"
-      placeholder="Username"
+      placeholder="Nombre de Usuario"
       value={username}
       onChange={(e) => setUsername(e.target.value)}
-      aria-label="Username"
+      aria-label="Nombre de Usuario"
       required
     />
     <input
       type="password"
-      placeholder="Password"
+      placeholder="Contraseña"
       value={password}
       onChange={(e) => setPassword(e.target.value)}
-      aria-label="Password"
+      aria-label="Contraseña"
       required
     />
-    <button type="submit">Sign Up</button>
+    <button type="submit">Registrar</button>
   </form>
 );
 
@@ -87,8 +87,8 @@ const LoginRegister = ({ onLogin }) => {
     if (!username || !password || (!isLogin && !name)) {
       Swal.fire({
         icon: 'warning',
-        title: 'Incomplete Form',
-        text: 'Please fill in all fields.'
+        title: 'Formulario incompleto',
+        text: 'Por favor, llena todos los campos.'
       });
       return;
     }
@@ -102,11 +102,11 @@ const LoginRegister = ({ onLogin }) => {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       onLogin();
     } catch (error) {
-      console.error(`Error ${isLogin ? 'logging in' : 'registering'}`, error);
+      console.error(`Error ${isLogin ? 'iniciando sesión' : 'registrando'}`, error);
       Swal.fire({
         icon: 'error',
-        title: `Error ${isLogin ? 'logging in' : 'registering'}`,
-        text: error.response?.data?.message || 'An error occurred. Please try again.'
+        title: `Error ${isLogin ? 'iniciando sesión' : 'registrando'}`,
+        text: error.response?.data?.message || 'Ocurrió un error. Por favor, inténtalo de nuevo.'
       });
     }
   };
@@ -137,14 +137,14 @@ const LoginRegister = ({ onLogin }) => {
       <div className="toggle-container">
         <div className="toggle">
           <div className="toggle-panel toggle-left">
-            <h1>Welcome Back!</h1>
-            <p>Enter your personal details to use all of site features</p>
-            <button className="hidden" onClick={() => setIsLogin(true)}>Sign In</button>
+            <h1>¡Bienvenido de nuevo!</h1>
+            <p>Introduce tus datos personales para acceder a todas las funciones del sitio</p>
+            <button className="hidden" onClick={() => setIsLogin(true)}>Iniciar Sesión</button>
           </div>
           <div className="toggle-panel toggle-right">
-            <h1>Hello, Friend!</h1>
-            <p>Register with your personal details to use all of site features</p>
-            <button className="hidden" onClick={() => setIsLogin(false)}>Sign Up</button>
+            <h1>¡Hola, Amigo!</h1>
+            <p>Regístrate con tus datos personales para acceder a todas las funciones del sitio</p>
+            <button className="hidden" onClick={() => setIsLogin(false)}>Crear Cuenta</button>
           </div>
         </div>
       </div>
