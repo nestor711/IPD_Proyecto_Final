@@ -80,6 +80,12 @@ const LoginRegister = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
+  const resetForm = () => {
+    setUsername('');
+    setPassword('');
+    setName('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -95,12 +101,22 @@ const LoginRegister = ({ onLogin }) => {
 
     try {
       const endpoint = isLogin ? '/auth/login' : '/auth/register';
-      const data = isLogin ? { username, password } : { name, username, password };
+      const data = isLogin ? { username, password } : { username, password, name };
       const response = await axios.post(`${API_URL}${endpoint}`, data);
       const token = response.data.token;
-      sessionStorage.setItem('token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      onLogin();
+      if (token) {
+        sessionStorage.setItem('token', token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        onLogin();
+        resetForm();
+      } else {
+        console.error('No se recibió token del servidor');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de autenticación',
+          text: 'No se pudo completar la autenticación. Por favor, intenta de nuevo.'
+        });
+      }
     } catch (error) {
       console.error(`Error ${isLogin ? 'iniciando sesión' : 'registrando'}`, error);
       Swal.fire({
@@ -139,12 +155,16 @@ const LoginRegister = ({ onLogin }) => {
           <div className="toggle-panel toggle-left">
             <h1>¡Bienvenido de nuevo!</h1>
             <p>Introduce tus datos personales para acceder a todas las funciones del sitio</p>
-            <button className="hidden" onClick={() => setIsLogin(true)}>Iniciar Sesión</button>
+            <button className="hidden" onClick={() => setIsLogin(!isLogin)}>
+              {isLogin ? 'Crear Cuenta' : 'Iniciar Sesión'}
+            </button>
           </div>
           <div className="toggle-panel toggle-right">
             <h1>¡Hola, Amigo!</h1>
             <p>Regístrate con tus datos personales para acceder a todas las funciones del sitio</p>
-            <button className="hidden" onClick={() => setIsLogin(false)}>Crear Cuenta</button>
+            <button className="hidden" onClick={() => setIsLogin(!isLogin)}>
+              {isLogin ? 'Crear Cuenta' : 'Iniciar Sesión'}
+            </button>
           </div>
         </div>
       </div>

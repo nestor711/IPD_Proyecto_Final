@@ -4,7 +4,7 @@ import ProjectList from './components/ProjectList';
 import ProjectForm from './components/ProjectForm';
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
-import Login from './components/Login';
+import LoginRegister from './components/LoginRegister';
 import { fetchProjects, fetchTasks } from './api';
 
 function App() {
@@ -14,19 +14,38 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  useEffect(() => {
     if (isLoggedIn) {
       loadProjects();
     }
   }, [isLoggedIn]);
 
   const loadProjects = async () => {
-    const response = await fetchProjects();
-    setProjects(response.data);
+    try {
+      const response = await fetchProjects();
+      setProjects(response.data);
+    } catch (error) {
+      console.error('Error loading projects', error);
+    }
   };
 
   const loadTasks = async (projectId) => {
-    const response = await fetchTasks(projectId);
-    setTasks(response.data);
+    try {
+      const response = await fetchTasks(projectId);
+      setTasks(response.data);
+    } catch (error) {
+      console.error('Error loading tasks', error);
+    }
+  };
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
   };
 
   const PrivateRoute = ({ children, ...rest }) => {
@@ -54,7 +73,7 @@ function App() {
       <div>
         <Switch>
           <Route path="/login">
-            {isLoggedIn ? <Redirect to="/" /> : <Login onLogin={() => setIsLoggedIn(true)} />}
+            {isLoggedIn ? <Redirect to="/" /> : <LoginRegister onLogin={handleLogin} />}
           </Route>
           <PrivateRoute path="/">
             <div>
