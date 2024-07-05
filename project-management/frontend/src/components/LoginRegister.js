@@ -128,42 +128,41 @@ const LoginRegister = ({ onLogin }) => {
   };
 
   return (
-    <div className="container" id="container">
-      <div className={`form-container ${isLogin ? 'sign-in' : 'sign-up'}`}>
-        {isLogin ? (
-          <LoginForm
-            username={username}
-            password={password}
-            setUsername={setUsername}
-            setPassword={setPassword}
-            handleSubmit={handleSubmit}
-          />
-        ) : (
-          <RegisterForm
-            name={name}
-            username={username}
-            password={password}
-            setName={setName}
-            setUsername={setUsername}
-            setPassword={setPassword}
-            handleSubmit={handleSubmit}
-          />
-        )}
+    <div className={`container ${!isLogin ? 'active' : ''}`} id="container">
+      <div className="form-container sign-up">
+        <RegisterForm
+          name={name}
+          username={username}
+          password={password}
+          setName={setName}
+          setUsername={setUsername}
+          setPassword={setPassword}
+          handleSubmit={handleSubmit}
+        />
+      </div>
+      <div className="form-container sign-in">
+        <LoginForm
+          username={username}
+          password={password}
+          setUsername={setUsername}
+          setPassword={setPassword}
+          handleSubmit={handleSubmit}
+        />
       </div>
       <div className="toggle-container">
         <div className="toggle">
           <div className="toggle-panel toggle-left">
             <h1>¡Bienvenido de nuevo!</h1>
             <p>Introduce tus datos personales para acceder a todas las funciones del sitio</p>
-            <button className="hidden" onClick={() => setIsLogin(!isLogin)}>
-              {isLogin ? 'Crear Cuenta' : 'Iniciar Sesión'}
+            <button className="hidden" onClick={() => setIsLogin(true)}>
+              Iniciar Sesión
             </button>
           </div>
           <div className="toggle-panel toggle-right">
             <h1>¡Hola, Amigo!</h1>
             <p>Regístrate con tus datos personales para acceder a todas las funciones del sitio</p>
-            <button className="hidden" onClick={() => setIsLogin(!isLogin)}>
-              {isLogin ? 'Crear Cuenta' : 'Iniciar Sesión'}
+            <button className="hidden" onClick={() => setIsLogin(false)}>
+              Crear Cuenta
             </button>
           </div>
         </div>
