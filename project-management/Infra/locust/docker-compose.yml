@@ -18,7 +18,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DB_HOST: postgres-service
+      DB_HOST: postgres
       DB_USER: db_user
       DB_PASS: db_password
       DB_NAME: db_name
@@ -26,6 +26,28 @@ services:
       - postgres
     networks:
       - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+  locust:
+    build:
+      context: ./infra/locust
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./infra/locust:/app
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    environment:
+      - TARGET_URL=http://backend:3000  # URL del backend a probar
 
 networks:
   app-network:
