@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import ProjectList from './components/ProjectList';
 import ProjectForm from './components/ProjectForm';
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
-import Login from './components/Login';
+import LoginRegister from './components/LoginRegister';
 import { fetchProjects, fetchTasks } from './api';
 
 function App() {
@@ -13,47 +14,91 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  useEffect(() => {
     if (isLoggedIn) {
       loadProjects();
     }
   }, [isLoggedIn]);
 
   const loadProjects = async () => {
-    const response = await fetchProjects();
-    setProjects(response.data);
+    try {
+      const response = await fetchProjects();
+      setProjects(response.data);
+    } catch (error) {
+      console.error('Error loading projects', error);
+    }
   };
 
   const loadTasks = async (projectId) => {
-    const response = await fetchTasks(projectId);
-    setTasks(response.data);
+    try {
+      const response = await fetchTasks(projectId);
+      setTasks(response.data);
+    } catch (error) {
+      console.error('Error loading tasks', error);
+    }
+  };
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const PrivateRoute = ({ children, ...rest }) => {
+    return (
+      <Route
+        {...rest}
+        render={({ location }) =>
+          isLoggedIn ? (
+            children
+          ) : (
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: { from: location }
+              }}
+            />
+          )
+        }
+      />
+    );
   };
 
   return (
-    <div>
-      {!isLoggedIn ? (
-        <Login onLogin={() => setIsLoggedIn(true)} />
-      ) : (
-        <div>
-          <h1>Project Management</h1>
-          <ProjectForm onAddProject={loadProjects} />
-          <ProjectList
-            projects={projects}
-            onSelectProject={(project) => {
-              setSelectedProject(project);
-              loadTasks(project.id);
-            }}
-            onDeleteProject={loadProjects}
-          />
-          {selectedProject && (
+    <Router>
+      <div>
+        <Switch>
+          <Route path="/login">
+            {isLoggedIn ? <Redirect to="/" /> : <LoginRegister onLogin={handleLogin} />}
+          </Route>
+          <PrivateRoute path="/">
             <div>
-              <h2>Tasks for {selectedProject.name}</h2>
-              <TaskForm projectId={selectedProject.id} onAddTask={() => loadTasks(selectedProject.id)} />
-              <TaskList tasks={tasks} onDeleteTask={() => loadTasks(selectedProject.id)} />
+              <h1>Project Management</h1>
+              <ProjectForm onAddProject={loadProjects} />
+              <ProjectList
+                projects={projects}
+                onSelectProject={(project) => {
+                  setSelectedProject(project);
+                  loadTasks(project.id);
+                }}
+                onDeleteProject={loadProjects}
+              />
+              {selectedProject && (
+                <div>
+                  <h2>Tasks for {selectedProject.name}</h2>
+                  <TaskForm projectId={selectedProject.id} onAddTask={() => loadTasks(selectedProject.id)} />
+                  <TaskList tasks={tasks} onDeleteTask={() => loadTasks(selectedProject.id)} />
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      )}
-    </div>
+          </PrivateRoute>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

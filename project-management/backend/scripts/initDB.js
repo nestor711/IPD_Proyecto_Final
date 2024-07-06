@@ -1,5 +1,4 @@
-const sequelize = require('../src/config/database');
-const { User, Project, Task } = require('../src/models');
+const { sequelize, User, Project, Task } = require('../src/models');
 const bcrypt = require('bcryptjs');
 
 async function initDB() {
