@@ -11,8 +11,9 @@ async function register(req, res) {
     const { username, password, name } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ username, password: hashedPassword, name });
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
     logger.info(`User registered: ${user.id}`);
-    res.status(201).json({ message: 'User registered' });
+    res.status(201).json({ token });
   } catch (error) {
     logger.error('Error registering user', error);
     res.status(500).json({ message: 'Error registering user' });
