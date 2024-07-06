@@ -33,6 +33,6 @@ const Task = sequelize.define('Task', {
 });
 
 Project.hasMany(Task, { onDelete: 'CASCADE' });
-Task.belongsTo(Project);
+Task.belongsTo(Project, { foreignKey: 'projectId' });
 
 module.exports = Task;

@@ -7,7 +7,11 @@ async function initDB() {
     await sequelize.sync({ force: true });
 
     const hashedPassword = await bcrypt.hash('admin123', 10);
-    const admin = await User.create({ username: 'admin', password: hashedPassword });
+    const admin = await User.create({ 
+      username: 'admin', 
+      password: hashedPassword,
+      name: 'Admin User'
+    });
 
     const project1 = await Project.create({ name: 'Project 1', description: 'First test project' });
     const project2 = await Project.create({ name: 'Project 2', description: 'Second test project' });
