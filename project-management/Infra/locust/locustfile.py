@@ -1,16 +1,33 @@
 from locust import HttpUser, task, between
 
-class ProjectTaskSet(HttpUser):
+class ProjectUser(HttpUser):
     wait_time = between(1, 5)
-
+    
     @task
-    def list_projects(self):
-        self.client.get("/api/proyectos")
-
+    def get_projects(self):
+        self.client.get("/api/projects")
+    
     @task
     def create_project(self):
-        self.client.post("/api/proyectos", json={"nombre": "Nuevo Proyecto"})
-
+        payload = {
+            "name": "Test Project",
+            "description": "This is a test project",
+            "start_date": "2024-07-06",
+            "end_date": "2024-12-31"
+        }
+        self.client.post("/api/projects", json=payload)
+    
     @task
-    def delete_project(self):
-        self.client.delete("/api/proyectos/1")  # Ejemplo de ID
+    def get_tasks(self):
+        self.client.get("/api/tasks")
+    
+    @task
+    def create_task(self):
+        payload = {
+            "name": "Test Task",
+            "description": "This is a test task",
+            "project_id": 1,
+            "start_date": "2024-07-06",
+            "end_date": "2024-07-20"
+        }
+        self.client.post("/api/tasks", json=payload)
