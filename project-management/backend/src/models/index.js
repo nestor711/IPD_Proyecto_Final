@@ -1,6 +1,7 @@
+const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Project = require('./project');
-const Task = require('./task');
+const Project = require('./project')(sequelize, DataTypes);
+const Task = require('./task')(sequelize, DataTypes);
 const User = require('./user');
 
 // Aquí deberías también inicializar tus modelos con sequelize, por ejemplo:
@@ -12,10 +13,14 @@ const User = require('./user');
 // Project.associate({ Task, User });
 // Task.associate({ Project, User });
 // User.associate({ Project, Task });
+Project.hasMany(Task, { foreignKey: 'projectId', onDelete: 'CASCADE' });
+Task.belongsTo(Project, { foreignKey: 'projectId' });
 
-module.exports = {
+const db = {
   sequelize,
+  Sequelize,
   Project,
   Task,
   User
 };
+module.exports = db;
