@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const logger = require('../logger');
 
-const JWT_SECRET = 'your_jwt_secret';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Registrar usuario
 async function register(req, res) {
