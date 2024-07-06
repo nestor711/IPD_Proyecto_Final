@@ -1,37 +1,40 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../config/database');
-const Project = require('./project');
 
-const Task = sequelize.define('Task', {
-  name: {
+class Task extends Model {}
+
+Task.init({
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  title: {
     type: DataTypes.STRING,
     allowNull: false
   },
   description: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: true
   },
-  completed: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
+  status: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'pending'
   },
   projectId: {
     type: DataTypes.INTEGER,
     references: {
-      model: Project,
-      key: 'id',
-      onDelete: 'CASCADE'
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
+      model: 'Projects',
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE'
   }
-}});
-
-Project.hasMany(Task, { onDelete: 'CASCADE' });
-Task.belongsTo(Project);
+}, {
+  sequelize,
+  modelName: 'Task',
+  timestamps: false
+});
 
 module.exports = Task;
