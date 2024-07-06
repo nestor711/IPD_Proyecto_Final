@@ -1,14 +1,7 @@
-const { DataTypes, Model } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-class Project extends Model {}
-
-Project.init({
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
+const Project = sequelize.define('Project', {
   name: {
     type: DataTypes.STRING,
     allowNull: false
@@ -18,9 +11,7 @@ Project.init({
     allowNull: true
   }
 }, {
-  sequelize,
-  modelName: 'Project',
-  timestamps: false
+  timestamps: true
 });
 
 module.exports = Project;

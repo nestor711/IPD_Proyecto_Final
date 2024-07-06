@@ -1,15 +1,9 @@
-const { DataTypes, Model } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Project = require('./project');
 
-class Task extends Model {}
-
-Task.init({
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  title: {
+const Task = sequelize.define('Task', {
+  name: {
     type: DataTypes.STRING,
     allowNull: false
   },
@@ -17,24 +11,16 @@ Task.init({
     type: DataTypes.STRING,
     allowNull: true
   },
-  status: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    defaultValue: 'pending'
-  },
   projectId: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     references: {
-      model: 'Projects',
+      model: Project,
       key: 'id'
-    },
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE'
+    }
   }
 }, {
-  sequelize,
-  modelName: 'Task',
-  timestamps: false
+  timestamps: true
 });
 
 module.exports = Task;
