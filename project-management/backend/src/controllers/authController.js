@@ -8,9 +8,9 @@ const JWT_SECRET = 'your_jwt_secret';
 // Registrar usuario
 async function register(req, res) {
   try {
-    const { username, password } = req.body;
+    const { username, password, name } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, password: hashedPassword });
+    const user = await User.create({ username, password: hashedPassword, name });
     logger.info(`User registered: ${user.id}`);
     res.status(201).json({ message: 'User registered' });
   } catch (error) {
