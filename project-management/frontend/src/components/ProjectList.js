@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { deleteProject, createProject, updateProject } from '../api';
+import { deleteProject, createProject, updateProject, fetchTasks } from '../api';
 import { FaPlus, FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 import ProjectForm from './ProjectForm';
 import Modal from './Modal';
 import Swal from 'sweetalert2';
+import TaskModal from './TaskModal'; // Importa el modal para tareas
 
 const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [projectList, setProjectList] = useState(projects); // Estado local para los proyectos
-  const [editProject, setEditProject] = useState(null); // Estado para el proyecto que se está editando
+  const [projectList, setProjectList] = useState(projects);
+  const [editProject, setEditProject] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null); // Estado para el proyecto seleccionado
+  const [tasks, setTasks] = useState([]); // Estado para las tareas del proyecto seleccionado
 
   useEffect(() => {
-    setProjectList(projects); // Actualizar el estado local cuando cambian los proyectos externos
+    setProjectList(projects);
   }, [projects]);
 
   const handleDelete = async (projectId) => {
@@ -27,7 +30,7 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
       if (result.isConfirmed) {
         await deleteProject(projectId);
         const updatedProjects = projectList.filter(project => project.id !== projectId);
-        setProjectList(updatedProjects); // Actualizar el estado local removiendo el proyecto eliminado
+        setProjectList(updatedProjects);
         Swal.fire('Deleted!', 'Your project has been deleted.', 'success');
         onDeleteProject();
       }
@@ -36,7 +39,7 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
 
   const handleNewProjectClick = () => {
     setIsModalOpen(true);
-    setEditProject(null); // Limpiar el proyecto en edición
+    setEditProject(null);
   };
 
   const handleEditProject = (project) => {
@@ -46,25 +49,23 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setEditProject(null); // Limpiar el proyecto en edición al cerrar el modal
+    setEditProject(null);
   };
 
   const handleSubmit = async (formData) => {
     try {
       if (editProject) {
-        // Actualizar proyecto existente
         const response = await updateProject(editProject.id, formData);
         const updatedProject = response.data;
         const updatedProjects = projectList.map((project) =>
           project.id === updatedProject.id ? updatedProject : project
         );
-        setProjectList(updatedProjects); // Actualizar el estado local con el proyecto actualizado
+        setProjectList(updatedProjects);
         Swal.fire('Updated!', 'Your project has been updated.', 'success');
       } else {
-        // Crear nuevo proyecto
         const response = await createProject(formData);
         const newProject = response.data;
-        setProjectList([...projectList, newProject]); // Agregar el nuevo proyecto al estado local
+        setProjectList([...projectList, newProject]);
         Swal.fire('Created!', 'Your new project has been created.', 'success');
       }
       closeModal();
@@ -72,6 +73,17 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
       console.error('Error:', error);
       Swal.fire('Error', 'Something went wrong!', 'error');
     }
+  };
+
+  const handleViewTasks = async (project) => {
+    setSelectedProject(project);
+    const response = await fetchTasks(project.id);
+    setTasks(response.data);
+  };
+
+  const handleCloseTaskModal = () => {
+    setSelectedProject(null);
+    setTasks([]);
   };
 
   return (
@@ -94,7 +106,7 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
                 <div><strong>Priority:</strong> {project.priority}</div>
               </div>
               <div style={styles.actions}>
-                <button style={styles.viewButton} onClick={() => onSelectProject(project)}>
+                <button style={styles.viewButton} onClick={() => handleViewTasks(project)}>
                   <FaEye /> View Tasks
                 </button>
                 <button style={styles.editButton} onClick={() => handleEditProject(project)}>
@@ -113,9 +125,18 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
         <ProjectForm
           onSubmit={handleSubmit}
           onClose={closeModal}
-          initialData={editProject} // Pasar los datos iniciales del proyecto para editar
+          initialData={editProject}
         />
       </Modal>
+
+      {selectedProject && (
+        <TaskModal
+          isOpen={!!selectedProject}
+          project={selectedProject}
+          tasks={tasks}
+          onClose={handleCloseTaskModal}
+        />
+      )}
     </div>
   );
 };
@@ -126,7 +147,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '10px 20px',
-    backgroundColor: '#512da8', // Cambiado el color de fondo del navbar
+    backgroundColor: '#333',
     color: '#fff',
   },
   title: {
@@ -136,11 +157,10 @@ const styles = {
   newProjectButton: {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#512da8', // Cambiado el color de fondo del botón
+    backgroundColor: '#512da8',
     color: '#fff',
-    border: '2px solid #fff', // Añadido el contorno blanco
+    border: 'none',
     padding: '10px 20px',
-    textTransform: 'uppercase', // Texto en mayúsculas
     cursor: 'pointer',
   },
   icon: {

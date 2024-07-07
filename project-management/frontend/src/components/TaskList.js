@@ -1,35 +1,48 @@
 import React from 'react';
-import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
-const TaskList = ({ project, onSelectProject, onDelete }) => {
-  const handleEdit = (projectId) => {
-    // Lógica para editar el proyecto
-    console.log(`Editing project with id ${projectId}`);
-  };
-
+const TaskList = ({ tasks, onEditTask, onDeleteTask }) => {
   return (
-    <div>
-      <button style={styles.viewButton} onClick={() => onSelectProject(project)}>
-        <FaEye /> View Tasks
-      </button>
-      <button style={styles.editButton} onClick={() => handleEdit(project.id)}>
-        <FaEdit /> Edit
-      </button>
-      <button style={styles.deleteButton} onClick={onDelete}>
-        <FaTrash /> Delete
-      </button>
-    </div>
+    <ul style={styles.taskList}>
+      {tasks.map((task) => (
+        <li key={task.id} style={styles.taskItem}>
+          <div style={styles.taskDetails}>
+            <span>{task.title}</span>
+            <div style={styles.actions}>
+              <button style={styles.editButton} onClick={() => onEditTask(task)}>
+                <FaEdit /> Edit
+              </button>
+              <button style={styles.deleteButton} onClick={() => onDeleteTask(task.id)}>
+                <FaTrash /> Delete
+              </button>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 };
 
 const styles = {
-  viewButton: {
-    marginRight: '10px',
-    backgroundColor: '#28a745',
-    color: '#fff',
-    border: 'none',
-    padding: '5px 10px',
-    cursor: 'pointer',
+  taskList: {
+    listStyle: 'none',
+    padding: 0,
+  },
+  taskItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '10px',
+    borderBottom: '1px solid #ccc',
+  },
+  taskDetails: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  },
+  actions: {
+    display: 'flex',
   },
   editButton: {
     marginRight: '10px',
@@ -45,7 +58,7 @@ const styles = {
     border: 'none',
     padding: '5px 10px',
     cursor: 'pointer',
-  }
+  },
 };
 
 export default TaskList;
