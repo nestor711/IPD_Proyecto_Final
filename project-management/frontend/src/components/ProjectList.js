@@ -2,15 +2,11 @@ import React, { useState } from 'react';
 import { deleteProject } from '../api';
 import { FaPlus } from 'react-icons/fa';
 import ProjectForm from './ProjectForm';
+import Modal from './Modal';
+import TaskList from './TaskList';
 
 const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    culmination_date: '',
-    priority: 'medium'
-  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDelete = async (projectId) => {
     await deleteProject(projectId);
@@ -18,31 +14,16 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
   };
 
   const handleNewProjectClick = () => {
-    setShowModal(true);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setShowModal(false);
-    setFormData({
-      title: '',
-      description: '',
-      culmination_date: '',
-      priority: 'medium'
-    });
+    setIsModalOpen(false);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Aquí puedes agregar la lógica para enviar los datos del formulario al servidor
+  const handleSubmit = (formData) => {
     console.log(formData);
+    // Aquí deberías manejar la creación del nuevo proyecto
     closeModal();
   };
 
@@ -59,20 +40,18 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
         {projects.map((project) => (
           <li key={project.id} style={styles.projectItem}>
             {project.title}
-            <button style={styles.viewButton} onClick={() => onSelectProject(project)}>View Tasks</button>
-            <button style={styles.deleteButton} onClick={() => handleDelete(project.id)}>Delete</button>
+            <TaskList
+              project={project}
+              onSelectProject={onSelectProject}
+              onDelete={() => handleDelete(project.id)}
+            />
           </li>
         ))}
       </ul>
 
-      {showModal && (
-        <ProjectForm
-          formData={formData}
-          onChange={handleChange}
-          onSubmit={handleSubmit}
-          onClose={closeModal}
-        />
-      )}
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <ProjectForm onSubmit={handleSubmit} onClose={closeModal} />
+      </Modal>
     </div>
   );
 };
@@ -93,7 +72,7 @@ const styles = {
   newProjectButton: {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#28a745',
+    backgroundColor: '#512da8',
     color: '#fff',
     border: 'none',
     padding: '10px 20px',
@@ -113,16 +92,6 @@ const styles = {
     padding: '10px',
     borderBottom: '1px solid #ccc',
   },
-  viewButton: {
-    marginRight: '10px',
-  },
-  deleteButton: {
-    backgroundColor: '#dc3545',
-    color: '#fff',
-    border: 'none',
-    padding: '5px 10px',
-    cursor: 'pointer',
-  }
 };
 
 export default ProjectList;

@@ -1,84 +1,81 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const ProjectForm = ({ formData, onChange, onSubmit, onClose }) => {
+const ProjectForm = ({ onSubmit, onClose }) => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [culminationDate, setCulminationDate] = useState('');
+  const [priority, setPriority] = useState('medium');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = {
+      title,
+      description,
+      culmination_date: culminationDate,
+      priority
+    };
+    onSubmit(formData);
+  };
+
   return (
-    <div style={styles.modalBackdrop}>
-      <div style={styles.modalContent}>
-        <h2>New Project</h2>
-        <form onSubmit={onSubmit}>
-          <div style={styles.formGroup}>
-            <label htmlFor="title">Title</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={onChange}
-              required
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={onChange}
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label htmlFor="culmination_date">Culmination Date</label>
-            <input
-              type="date"
-              id="culmination_date"
-              name="culmination_date"
-              value={formData.culmination_date}
-              onChange={onChange}
-            />
-          </div>
-          <div style={styles.formGroup}>
-            <label htmlFor="priority">Priority</label>
-            <select
-              id="priority"
-              name="priority"
-              value={formData.priority}
-              onChange={onChange}
-            >
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
-          </div>
-          <div style={styles.buttonGroup}>
-            <button type="button" style={styles.cancelButton} onClick={onClose}>
-              Cancel
-            </button>
-            <button type="submit" style={styles.addButton}>Add</button>
-          </div>
-        </form>
-      </div>
+    <div>
+      <h2>New Project</h2>
+      <form onSubmit={handleSubmit}>
+        <div style={styles.formGroup}>
+          <label htmlFor="title">Title</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
+        <div style={styles.formGroup}>
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        <div style={styles.formGroup}>
+          <label htmlFor="culmination_date">Culmination Date</label>
+          <input
+            type="date"
+            id="culmination_date"
+            name="culmination_date"
+            value={culminationDate}
+            onChange={(e) => setCulminationDate(e.target.value)}
+          />
+        </div>
+        <div style={styles.formGroup}>
+          <label htmlFor="priority">Priority</label>
+          <select
+            id="priority"
+            name="priority"
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+          >
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <div style={styles.buttonGroup}>
+          <button type="button" style={styles.cancelButton} onClick={onClose}>
+            Cancel
+          </button>
+          <button type="submit" style={styles.addButton}>Add</button>
+        </div>
+      </form>
     </div>
   );
 };
 
 const styles = {
-  modalBackdrop: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    padding: '20px',
-    borderRadius: '5px',
-    width: '400px',
-  },
   formGroup: {
     marginBottom: '15px',
     display: 'flex',
