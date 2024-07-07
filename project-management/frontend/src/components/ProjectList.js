@@ -79,7 +79,7 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
       <nav style={styles.navbar}>
         <h1 style={styles.title}>Project Management</h1>
         <button style={styles.newProjectButton} onClick={handleNewProjectClick}>
-          New Project <FaPlus style={styles.icon} />
+          NEW PROJECT <FaPlus style={styles.icon} />
         </button>
       </nav>
       
@@ -126,7 +126,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '10px 20px',
-    backgroundColor: '#333',
+    backgroundColor: '#512da8', // Cambiado el color de fondo del navbar
     color: '#fff',
   },
   title: {
@@ -136,10 +136,11 @@ const styles = {
   newProjectButton: {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#512da8',
+    backgroundColor: '#512da8', // Cambiado el color de fondo del botón
     color: '#fff',
-    border: 'none',
+    border: '2px solid #fff', // Añadido el contorno blanco
     padding: '10px 20px',
+    textTransform: 'uppercase', // Texto en mayúsculas
     cursor: 'pointer',
   },
   icon: {
