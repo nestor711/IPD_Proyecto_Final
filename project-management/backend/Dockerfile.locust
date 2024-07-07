@@ -1,0 +1,15 @@
+FROM python:3.9
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY locustfile.py .
+COPY users.json .
+COPY projects.json .
+COPY tasks.json .
+
+EXPOSE 8089
+
+CMD ["locust", "--host", "${TARGET_HOST}"]
