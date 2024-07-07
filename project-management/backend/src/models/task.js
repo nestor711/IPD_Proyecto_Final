@@ -4,11 +4,11 @@ const Project = require('./project');
 
 const Task = sequelize.define('Task', {
   title: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(1000),
     allowNull: false
   },
   description: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
   },
   creation_date: {

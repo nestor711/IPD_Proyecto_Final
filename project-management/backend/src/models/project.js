@@ -3,11 +3,11 @@ const sequelize = require('../config/database');
 
 const Project = sequelize.define('Project', {
   title: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(1000),
     allowNull: false
   },
   description: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
   },
   creation_date: {
