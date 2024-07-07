@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import taskImage from '../assets/tarea.png';
-import Swal from 'sweetalert2'; // Importar SweetAlert2
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import TaskList from './TaskList';
 import TaskForm from './TaskForm';
 import Modal from './Modal';
@@ -9,7 +9,7 @@ import { fetchTasks, createTask, deleteTask, updateTask } from '../api';
 const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onDeleteTask }) => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [isFormVisible, setIsFormVisible] = useState(false); // Inicialmente oculto el formulario
+  const [isFormVisible, setIsFormVisible] = useState(false); // Initially hide the form
 
   useEffect(() => {
     if (isOpen) {
@@ -25,7 +25,7 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
       const newTask = response.data;
       setTasks([...tasks, newTask]);
       onCreateTask();
-      setIsFormVisible(true); // Mostrar formulario después de crear una tarea
+      setIsFormVisible(true); // Show form after creating a task
     } catch (error) {
       console.error('Error creating task:', error);
     }
@@ -46,16 +46,16 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
   };
 
   const handleDeleteTask = async (taskId) => {
-    // Mostrar alerta de confirmación con SweetAlert2
+    // Show confirmation alert using SweetAlert2
     Swal.fire({
-      title: '¿Estás seguro?',
-      text: '¡No podrás revertir esto!',
+      title: 'Are you sure?',
+      text: 'You will not be able to revert this!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Yes, delete it',
+      cancelButtonText: 'Cancel',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -64,15 +64,15 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
           setTasks(updatedTasks);
           onDeleteTask();
           Swal.fire(
-            '¡Eliminado!',
-            'La tarea ha sido eliminada.',
+            'Deleted!',
+            'The task has been deleted.',
             'success'
           );
         } catch (error) {
           console.error('Error deleting task:', error);
           Swal.fire(
             'Error',
-            'Hubo un problema al intentar eliminar la tarea.',
+            'There was a problem deleting the task.',
             'error'
           );
         }
@@ -96,7 +96,7 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
     <Modal isOpen={isOpen} onClose={onClose}>
       <div style={styles.container}>
         <div style={styles.leftColumn}>
-          <h2 style={styles.title}>Tareas</h2>
+          <h2 style={styles.title}>Tasks</h2>
           <TaskForm
             onSubmit={selectedTask ? handleUpdateTask : handleCreateTask}
             initialData={selectedTask}
@@ -105,7 +105,7 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
           {!hasTasks && (
             <div style={styles.noTasksMessage}>
               <img src={taskImage} alt="task" style={styles.image} />
-              <p>No hay tareas creadas para este proyecto.</p>
+              <p>No tasks created for this project.</p>
             </div>
           )}
         </div>
@@ -121,6 +121,8 @@ const styles = {
   container: {
     display: 'flex',
     justifyContent: 'space-between',
+    width: '800px', // Adjust modal width as needed
+    maxHeight: '1000px', // Adjust modal max height as needed
   },
   leftColumn: {
     flex: '0 0 45%',
