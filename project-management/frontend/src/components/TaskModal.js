@@ -3,13 +3,16 @@ import TaskList from './TaskList';
 import TaskForm from './TaskForm';
 import Modal from './Modal';
 import taskImage from '../assets/tarea.png';
+import Swal from 'sweetalert2';
 import { fetchTasks, createTask, deleteTask, updateTask } from '../api';
 
 const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onDeleteTask }) => {
   const [tasks, setTasks] = useState([]);
+  const [selectedTask, setSelectedTask] = useState(null); // Estado para la tarea seleccionada en modo edición
+  const [isFormVisible, setIsFormVisible] = useState(true); // Mantener el formulario siempre visible
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && projectId) {
       fetchTasks(projectId)
         .then(response => setTasks(response.data))
         .catch(error => console.error('Error fetching tasks:', error));
@@ -18,7 +21,7 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
 
   const handleCreateTask = async (taskData) => {
     try {
-      const response = await createTask({ ...taskData, projectId });
+      const response = await createTask(taskData);
       const newTask = response.data;
       setTasks([...tasks, newTask]);
       onCreateTask();
@@ -36,6 +39,7 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
       );
       setTasks(updatedTasks);
       onUpdateTask();
+      setSelectedTask(null); // Limpiar la tarea seleccionada después de actualizar
     } catch (error) {
       console.error('Error updating task:', error);
     }
@@ -47,9 +51,19 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
       const updatedTasks = tasks.filter(task => task.id !== taskId);
       setTasks(updatedTasks);
       onDeleteTask();
+      Swal.fire({
+        icon: 'success',
+        title: 'Task Deleted',
+        text: 'The task has been successfully deleted.',
+      });
     } catch (error) {
       console.error('Error deleting task:', error);
     }
+  };
+
+  const handleEditTask = (task) => {
+    setSelectedTask(task); // Establecer la tarea seleccionada para editar en el formulario
+    setIsFormVisible(true); // Mostrar el formulario si no está visible
   };
 
   const hasTasks = tasks.length > 0;
@@ -59,16 +73,17 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
       <div style={styles.container}>
         <div style={styles.leftColumn}>
           <h2 style={styles.title}>Tareas</h2>
-          <TaskForm onSubmit={handleCreateTask} onCancel={onClose} />
+          <TaskForm onSubmit={selectedTask ? handleUpdateTask : handleCreateTask} initialData={selectedTask} onCancel={() => setSelectedTask(null)} />
+        </div>
+        <div style={styles.rightColumn}>
+          <h2 style={styles.title}>Tareas</h2>
           {!hasTasks && (
             <div style={styles.noTasksMessage}>
               <img src={taskImage} alt="task" style={styles.image} />
               <p>No hay tareas creadas para este proyecto.</p>
             </div>
           )}
-        </div>
-        <div style={styles.rightColumn}>
-          <TaskList tasks={tasks} onEditTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />
+          {hasTasks && <TaskList tasks={tasks} onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />}
         </div>
       </div>
     </Modal>
