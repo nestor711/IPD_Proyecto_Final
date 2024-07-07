@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
-const ProjectForm = ({ onSubmit, onClose }) => {
+const ProjectForm = ({ onSubmit, onClose, initialData }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [culminationDate, setCulminationDate] = useState('');
   const [priority, setPriority] = useState('medium');
+
+  // Configurar los valores iniciales si hay datos iniciales (para editar)
+  useEffect(() => {
+    if (initialData) {
+      setTitle(initialData.title || '');
+      setDescription(initialData.description || '');
+      setCulminationDate(initialData.culmination_date || '');
+      setPriority(initialData.priority || 'medium');
+    }
+  }, [initialData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,7 +30,7 @@ const ProjectForm = ({ onSubmit, onClose }) => {
 
   return (
     <div>
-      <h2>New Project</h2>
+      <h2>{initialData ? 'Edit Project' : 'New Project'}</h2>
       <form onSubmit={handleSubmit}>
         <div style={styles.formGroup}>
           <label htmlFor="title">Title</label>
@@ -68,7 +79,9 @@ const ProjectForm = ({ onSubmit, onClose }) => {
           <button type="button" style={styles.cancelButton} onClick={onClose}>
             Cancel
           </button>
-          <button type="submit" style={styles.addButton}>Add</button>
+          <button type="submit" style={styles.updateButton}>
+            {initialData ? 'Update' : 'Add'}
+          </button>
         </div>
       </form>
     </div>
@@ -92,7 +105,7 @@ const styles = {
     padding: '10px 20px',
     cursor: 'pointer',
   },
-  addButton: {
+  updateButton: {
     backgroundColor: '#007bff',
     color: '#fff',
     border: 'none',
