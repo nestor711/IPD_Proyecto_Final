@@ -8,10 +8,20 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
     status: 'pending',
     dueDate: '',
   });
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (initialData) {
       setTaskData(initialData);
+      setIsEditing(true);
+    } else {
+      setTaskData({
+        title: '',
+        description: '',
+        status: 'pending',
+        dueDate: '',
+      });
+      setIsEditing(false);
     }
   }, [initialData]);
 
@@ -23,6 +33,14 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(taskData);
+    if (!isEditing) {
+      setTaskData({
+        title: '',
+        description: '',
+        status: 'pending',
+        dueDate: '',
+      });
+    }
   };
 
   return (
@@ -35,7 +53,7 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
         )}
       </div>
       <div style={styles.field}>
-        <label htmlFor="title">Task Title</label>
+        <label htmlFor="title">Título de la Tarea</label>
         <input
           type="text"
           id="title"
@@ -46,7 +64,7 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
         />
       </div>
       <div style={styles.field}>
-        <label htmlFor="description">Description</label>
+        <label htmlFor="description">Descripción</label>
         <textarea
           id="description"
           name="description"
@@ -55,7 +73,7 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
         />
       </div>
       <div style={styles.field}>
-        <label htmlFor="status">Status</label>
+        <label htmlFor="status">Estado</label>
         <select
           id="status"
           name="status"
@@ -63,14 +81,14 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
           onChange={handleChange}
           required
         >
-          <option value="in_progress">In Progress</option>
-          <option value="completed">Completed</option>
-          <option value="pending">Pending</option>
-          <option value="cancelled">Cancelled</option>
+          <option value="in_progress">En Progreso</option>
+          <option value="completed">Completada</option>
+          <option value="pending">Pendiente</option>
+          <option value="cancelled">Cancelada</option>
         </select>
       </div>
       <div style={styles.field}>
-        <label htmlFor="dueDate">Due Date</label>
+        <label htmlFor="dueDate">Fecha de Vencimiento</label>
         <input
           type="date"
           id="dueDate"
@@ -80,8 +98,8 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
         />
       </div>
       <div style={styles.actions}>
-        <button type="submit">Save</button>
-        <button type="button" onClick={onCancel}>Cancel</button>
+        <button type="submit">{isEditing ? 'Actualizar' : 'Guardar'}</button>
+        <button type="button" onClick={onCancel}>Cancelar</button>
       </div>
     </form>
   );
