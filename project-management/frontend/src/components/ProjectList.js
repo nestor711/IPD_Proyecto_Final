@@ -147,7 +147,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '10px 20px',
-    backgroundColor: '#333',
+    backgroundColor: '#512da8', // Cambiado a #512da8
     color: '#fff',
   },
   title: {
@@ -157,11 +157,13 @@ const styles = {
   newProjectButton: {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#512da8',
+    backgroundColor: '#512da8', // Cambiado a #512da8
     color: '#fff',
-    border: 'none',
+    border: '1px solid #fff', // Nuevo borde blanco
+    borderRadius: '5px', // Borde redondeado
     padding: '10px 20px',
     cursor: 'pointer',
+    textTransform: 'uppercase', // Texto en mayúscula
   },
   icon: {
     marginLeft: '10px',
@@ -219,3 +221,4 @@ const styles = {
 };
 
 export default ProjectList;
+

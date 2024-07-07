@@ -30,31 +30,37 @@ const ProjectForm = ({ onSubmit, onClose, initialData }) => {
 
   return (
     <div>
-      <h2>{initialData ? 'Edit Project' : 'New Project'}</h2>
+      <h2 style={styles.modalTitle}>{initialData ? 'Edit Project' : 'New Project'}</h2>
+      <hr style={styles.divider} />
       <form onSubmit={handleSubmit}>
         <div style={styles.formGroup}>
-          <label htmlFor="title">Title</label>
+          <label style={styles.label} htmlFor="title">Title</label>
           <input
+            style={styles.input}
             type="text"
             id="title"
             name="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter title"
             required
           />
         </div>
         <div style={styles.formGroup}>
-          <label htmlFor="description">Description</label>
+          <label style={styles.label} htmlFor="description">Description</label>
           <textarea
+            style={styles.textarea}
             id="description"
             name="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter description"
           />
         </div>
         <div style={styles.formGroup}>
-          <label htmlFor="culmination_date">Culmination Date</label>
+          <label style={styles.label} htmlFor="culmination_date">Culmination Date</label>
           <input
+            style={styles.input}
             type="date"
             id="culmination_date"
             name="culmination_date"
@@ -63,8 +69,9 @@ const ProjectForm = ({ onSubmit, onClose, initialData }) => {
           />
         </div>
         <div style={styles.formGroup}>
-          <label htmlFor="priority">Priority</label>
+          <label style={styles.label} htmlFor="priority">Priority</label>
           <select
+            style={styles.select}
             id="priority"
             name="priority"
             value={priority}
@@ -77,10 +84,10 @@ const ProjectForm = ({ onSubmit, onClose, initialData }) => {
         </div>
         <div style={styles.buttonGroup}>
           <button type="button" style={styles.cancelButton} onClick={onClose}>
-            Cancel
+            CANCEL
           </button>
-          <button type="submit" style={styles.updateButton}>
-            {initialData ? 'Update' : 'Add'}
+          <button type="submit" style={styles.addButton}>
+            {initialData ? 'UPDATE' : 'ADD'}
           </button>
         </div>
       </form>
@@ -89,28 +96,71 @@ const ProjectForm = ({ onSubmit, onClose, initialData }) => {
 };
 
 const styles = {
+  modalTitle: {
+    textAlign: 'center',
+    fontSize: '24px',
+    marginBottom: '15px',
+  },
+  divider: {
+    width: '100%',
+    height: '1px',
+    backgroundColor: '#ccc',
+    margin: '10px 0 20px 0',
+  },
   formGroup: {
     marginBottom: '15px',
-    display: 'flex',
-    flexDirection: 'column',
+  },
+  label: {
+    fontWeight: 'bold',
+    marginBottom: '5px',
+  },
+  input: {
+    border: 'none',
+    borderBottom: '1px solid #ccc',
+    padding: '5px 0',
+    width: '100%',
+    marginBottom: '10px',
+    fontSize: '16px',
+  },
+  textarea: {
+    border: '1px solid #ccc',
+    padding: '10px',
+    width: '100%',
+    marginBottom: '10px',
+    fontSize: '16px',
+  },
+  select: {
+    border: '1px solid #ccc',
+    padding: '5px 10px',
+    fontSize: '16px',
+    marginBottom: '10px',
   },
   buttonGroup: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    marginTop: '20px',
   },
   cancelButton: {
     backgroundColor: '#dc3545',
     color: '#fff',
     border: 'none',
-    padding: '10px 20px',
+    padding: '15px 30px',
     cursor: 'pointer',
+    borderRadius: '5px',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    width: 'calc(50% - 10px)', // Ajustar el ancho para ocupar desde el lateral hasta el centro
   },
-  updateButton: {
+  addButton: {
     backgroundColor: '#007bff',
     color: '#fff',
     border: 'none',
-    padding: '10px 20px',
+    padding: '15px 30px',
     cursor: 'pointer',
+    borderRadius: '5px',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    width: 'calc(50% - 10px)', // Ajustar el ancho para ocupar desde el lateral hasta el centro
   },
 };
 
