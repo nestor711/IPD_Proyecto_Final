@@ -11,7 +11,7 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
     <ul>
       {projects.map((project) => (
         <li key={project.id}>
-          {project.name}
+          {project.title}
           <button onClick={() => onSelectProject(project)}>View Tasks</button>
           <button onClick={() => handleDelete(project.id)}>Delete</button>
         </li>
