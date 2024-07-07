@@ -5,7 +5,7 @@ const ProjectForm = ({ onSubmit, onClose, initialData }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [culminationDate, setCulminationDate] = useState('');
-  const [priority, setPriority] = useState('medium');
+  const [priority, setPriority] = useState(initialData?.priority || 'medium');
 
   // Configurar los valores iniciales si hay datos iniciales (para editar)
   useEffect(() => {
@@ -17,13 +17,17 @@ const ProjectForm = ({ onSubmit, onClose, initialData }) => {
     }
   }, [initialData]);
 
+  const handlePriorityChange = (value) => {
+    setPriority(value);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = {
       title,
       description,
       culmination_date: culminationDate,
-      priority
+      priority,
     };
     onSubmit(formData);
   };
@@ -69,25 +73,40 @@ const ProjectForm = ({ onSubmit, onClose, initialData }) => {
           />
         </div>
         <div style={styles.formGroup}>
-          <label style={styles.label} htmlFor="priority">Priority</label>
-          <select
-            style={styles.select}
-            id="priority"
-            name="priority"
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-          >
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-          </select>
+          <label style={styles.label}>Priority</label>
+          <div style={styles.radioGroup}>
+            <label style={styles.radioLabel}>
+              <input
+                type="radio"
+                checked={priority === 'high'}
+                onChange={() => handlePriorityChange('high')}
+              />
+              High
+            </label>
+            <label style={styles.radioLabel}>
+              <input
+                type="radio"
+                checked={priority === 'medium'}
+                onChange={() => handlePriorityChange('medium')}
+              />
+              Medium
+            </label>
+            <label style={styles.radioLabel}>
+              <input
+                type="radio"
+                checked={priority === 'low'}
+                onChange={() => handlePriorityChange('low')}
+              />
+              Low
+            </label>
+          </div>
         </div>
         <div style={styles.buttonGroup}>
-          <button type="button" style={styles.cancelButton} onClick={onClose}>
-            CANCEL
-          </button>
           <button type="submit" style={styles.addButton}>
             {initialData ? 'UPDATE' : 'ADD'}
+          </button>
+          <button type="button" style={styles.cancelButton} onClick={onClose}>
+            CANCEL
           </button>
         </div>
       </form>
@@ -129,19 +148,21 @@ const styles = {
     marginBottom: '10px',
     fontSize: '16px',
   },
-  select: {
-    border: '1px solid #ccc',
-    padding: '5px 10px',
-    fontSize: '16px',
+  radioGroup: {
+    display: 'flex',
     marginBottom: '10px',
+  },
+  radioLabel: {
+    marginRight: '20px',
+    fontSize: '16px',
   },
   buttonGroup: {
     display: 'flex',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginTop: '20px',
   },
-  cancelButton: {
-    backgroundColor: '#dc3545',
+  addButton: {
+    backgroundColor: '#007bff',
     color: '#fff',
     border: 'none',
     padding: '15px 30px',
@@ -151,8 +172,8 @@ const styles = {
     fontWeight: 'bold',
     width: 'calc(50% - 10px)', // Ajustar el ancho para ocupar desde el lateral hasta el centro
   },
-  addButton: {
-    backgroundColor: '#007bff',
+  cancelButton: {
+    backgroundColor: '#dc3545',
     color: '#fff',
     border: 'none',
     padding: '15px 30px',
