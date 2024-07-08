@@ -37,7 +37,8 @@ Validar la alta disponibilidad proporcionada por Docker Swarm en el desarrollo y
 ### 4. Comandos para Despliegue y Acceso Local
 
 - Iniciar Docker Swarm en el nodo:
-  docker swarm init
+  
+  #### docker swarm init
 
 - Comandos para construir las imágenes y desplegar servicios en Docker Swarm
 
