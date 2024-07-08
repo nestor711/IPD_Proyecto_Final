@@ -46,14 +46,10 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
       <div style={styles.imageContainer}>
-        {taskData.title ? (
-          <img src={taskImage} alt="task" style={styles.image} />
-        ) : (
-          <p>No hay tareas creadas para este proyecto.</p>
-        )}
+        <img src={taskImage} alt="task" style={styles.image} />
       </div>
       <div style={styles.field}>
-        <label style={styles.label} htmlFor="title">Título de la Tarea</label>
+        <label style={styles.label} htmlFor="title">Task Title</label>
         <input
           style={styles.input}
           type="text"
@@ -61,60 +57,68 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
           name="title"
           value={taskData.title}
           onChange={handleChange}
-          placeholder="Ingrese el título"
+          placeholder="Enter title"
           required
         />
       </div>
       <div style={styles.field}>
-        <label style={styles.label} htmlFor="description">Descripción</label>
+        <label style={styles.label} htmlFor="description">Description</label>
         <textarea
           style={styles.textarea}
           id="description"
           name="description"
           value={taskData.description}
           onChange={handleChange}
-          placeholder="Ingrese la descripción"
+          placeholder="Enter description"
         />
       </div>
       <div style={styles.field}>
-        <label style={styles.label}>Estado</label>
+        <label style={styles.label}>Status</label>
         <div style={styles.radioGroup}>
           <label style={styles.radioLabel}>
             <input
               type="radio"
+              name="status"
+              value="in_progress"
               checked={taskData.status === 'in_progress'}
-              onChange={() => handleChange({ target: { name: 'status', value: 'in_progress' } })}
+              onChange={handleChange}
             />
-            En Progreso
+            In Progress
           </label>
           <label style={styles.radioLabel}>
             <input
               type="radio"
+              name="status"
+              value="completed"
               checked={taskData.status === 'completed'}
-              onChange={() => handleChange({ target: { name: 'status', value: 'completed' } })}
+              onChange={handleChange}
             />
-            Completada
+            Completed
           </label>
           <label style={styles.radioLabel}>
             <input
               type="radio"
+              name="status"
+              value="pending"
               checked={taskData.status === 'pending'}
-              onChange={() => handleChange({ target: { name: 'status', value: 'pending' } })}
+              onChange={handleChange}
             />
-            Pendiente
+            Pending
           </label>
           <label style={styles.radioLabel}>
             <input
               type="radio"
+              name="status"
+              value="cancelled"
               checked={taskData.status === 'cancelled'}
-              onChange={() => handleChange({ target: { name: 'status', value: 'cancelled' } })}
+              onChange={handleChange}
             />
-            Cancelada
+            Cancelled
           </label>
         </div>
       </div>
       <div style={styles.field}>
-        <label style={styles.label} htmlFor="dueDate">Fecha de Vencimiento</label>
+        <label style={styles.label} htmlFor="dueDate">Due Date</label>
         <input
           style={styles.input}
           type="date"
@@ -126,10 +130,10 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
       </div>
       <div style={styles.actions}>
         <button type="submit" style={styles.addButton}>
-          {isEditing ? 'Actualizar' : 'Guardar'}
+          {isEditing ? 'Update' : 'Save'}
         </button>
         <button type="button" onClick={onCancel} style={styles.cancelButton}>
-          Cancelar
+          Cancel
         </button>
       </div>
     </form>
@@ -165,6 +169,7 @@ const styles = {
   },
   radioGroup: {
     display: 'flex',
+    flexWrap: 'wrap',
     marginBottom: '10px',
   },
   radioLabel: {
@@ -172,6 +177,7 @@ const styles = {
     fontSize: '16px',
     display: 'flex',
     alignItems: 'center',
+    marginBottom: '5px',
   },
   actions: {
     display: 'flex',
@@ -182,23 +188,23 @@ const styles = {
     backgroundColor: '#007bff',
     color: '#fff',
     border: 'none',
-    padding: '15px 30px',
+    padding: '10px 20px',
     cursor: 'pointer',
     borderRadius: '5px',
     textTransform: 'uppercase',
     fontWeight: 'bold',
-    width: 'calc(50% - 10px)', // Ajustar el ancho para ocupar desde el lateral hasta el centro
+    width: 'calc(50% - 5px)',
   },
   cancelButton: {
     backgroundColor: '#dc3545',
     color: '#fff',
     border: 'none',
-    padding: '15px 30px',
+    padding: '10px 20px',
     cursor: 'pointer',
     borderRadius: '5px',
     textTransform: 'uppercase',
     fontWeight: 'bold',
-    width: 'calc(50% - 10px)', // Ajustar el ancho para ocupar desde el lateral hasta el centro
+    width: 'calc(50% - 5px)',
   },
   imageContainer: {
     textAlign: 'center',

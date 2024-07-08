@@ -3,27 +3,33 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const TaskList = ({ tasks, onEditTask, onDeleteTask }) => {
   return (
-    <ul style={styles.taskList}>
-      {tasks.map((task) => (
-        <li key={task.id} style={styles.taskItem}>
-          <div style={styles.taskDetails}>
-            <span>{task.title}</span>
-            <div style={styles.actions}>
-              <button style={styles.editButton} onClick={() => onEditTask(task)}>
-                <FaEdit /> Edit
-              </button>
-              <button style={styles.deleteButton} onClick={() => onDeleteTask(task.id)}>
-                <FaTrash /> Delete
-              </button>
+    <div style={styles.container}>
+      <ul style={styles.taskList}>
+        {tasks.map((task) => (
+          <li key={task.id} style={styles.taskItem}>
+            <div style={styles.taskDetails}>
+              <span>{task.title}</span>
+              <div style={styles.actions}>
+                <button style={styles.editButton} onClick={() => onEditTask(task)}>
+                  <FaEdit /> Edit
+                </button>
+                <button style={styles.deleteButton} onClick={() => onDeleteTask(task.id)}>
+                  <FaTrash /> Delete
+                </button>
+              </div>
             </div>
-          </div>
-        </li>
-      ))}
-    </ul>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
 const styles = {
+  container: {
+    maxHeight: '500px',
+    overflowY: 'auto',
+  },
   taskList: {
     listStyle: 'none',
     padding: 0,

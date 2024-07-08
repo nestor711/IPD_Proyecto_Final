@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import taskImage from '../assets/tarea.png';
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import Swal from 'sweetalert2';
 import TaskList from './TaskList';
 import TaskForm from './TaskForm';
-import Modal from './Modal';
+import Modal from './Modal2';
 import { fetchTasks, createTask, deleteTask, updateTask } from '../api';
 
 const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onDeleteTask }) => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [isFormVisible, setIsFormVisible] = useState(false); // Initially hide the form
 
   useEffect(() => {
     if (isOpen) {
@@ -25,7 +23,6 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
       const newTask = response.data;
       setTasks([...tasks, newTask]);
       onCreateTask();
-      setIsFormVisible(true); // Show form after creating a task
     } catch (error) {
       console.error('Error creating task:', error);
     }
@@ -40,13 +37,13 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
       );
       setTasks(updatedTasks);
       onUpdateTask();
+      setSelectedTask(null);
     } catch (error) {
       console.error('Error updating task:', error);
     }
   };
 
   const handleDeleteTask = async (taskId) => {
-    // Show confirmation alert using SweetAlert2
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to revert this!',
@@ -82,35 +79,26 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
 
   const handleEditTask = (task) => {
     setSelectedTask(task);
-    setIsFormVisible(true);
   };
 
   const handleCancelEdit = () => {
     setSelectedTask(null);
-    setIsFormVisible(false);
   };
-
-  const hasTasks = tasks.length > 0;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div style={styles.container}>
         <div style={styles.leftColumn}>
-          <h2 style={styles.title}>Tasks</h2>
+          <h2 style={styles.title}>Task Form</h2>
           <TaskForm
             onSubmit={selectedTask ? handleUpdateTask : handleCreateTask}
             initialData={selectedTask}
             onCancel={handleCancelEdit}
           />
-          {!hasTasks && (
-            <div style={styles.noTasksMessage}>
-              <img src={taskImage} alt="task" style={styles.image} />
-              <p>No tasks created for this project.</p>
-            </div>
-          )}
         </div>
         <div style={styles.rightColumn}>
-          {hasTasks && <TaskList tasks={tasks} onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />}
+          <h2 style={styles.title}>Task List</h2>
+          <TaskList tasks={tasks} onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />
         </div>
       </div>
     </Modal>
@@ -121,31 +109,24 @@ const styles = {
   container: {
     display: 'flex',
     justifyContent: 'space-between',
-    width: '800px', // Adjust modal width as needed
-    maxHeight: '1000px', // Adjust modal max height as needed
+    width: '800px',
+    height: '600px',
   },
   leftColumn: {
     flex: '0 0 45%',
     paddingRight: '20px',
+    overflowY: 'auto',
   },
   rightColumn: {
     flex: '0 0 50%',
     borderLeft: '1px solid #ccc',
     paddingLeft: '20px',
+    overflowY: 'auto',
   },
   title: {
     marginBottom: '20px',
     borderBottom: '1px solid #ccc',
     paddingBottom: '10px',
-  },
-  noTasksMessage: {
-    textAlign: 'center',
-    marginTop: '20px',
-  },
-  image: {
-    width: '100px',
-    height: '100px',
-    marginBottom: '10px',
   },
 };
 
