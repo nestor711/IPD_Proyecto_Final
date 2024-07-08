@@ -94,4 +94,17 @@ async function deleteTask(req, res) {
   }
 }
 
-module.exports = { createTask, getAllTasks, getTaskById, updateTask, deleteTask };
+// Obtener todas las tareas de un proyecto específico
+async function getTasksByProjectId(req, res) {
+  try {
+    const { projectId } = req.params;
+    const tasks = await Task.findAll({
+      where: { projectId: projectId }
+    });
+    res.status(200).json(tasks);
+  } catch (error) {
+    logger.error('Error getting tasks for project', error);
+    res.status(500).json({ message: 'Error getting tasks for project' });
+  }
+}
+module.exports = { createTask, getAllTasks, getTaskById, updateTask, deleteTask, getTasksByProjectId };

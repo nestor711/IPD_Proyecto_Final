@@ -80,4 +80,17 @@ async function deleteProject(req, res) {
   }
 }
 
-module.exports = { createProject, getAllProjects, getProjectById, updateProject, deleteProject };
+// Obtener los IDs de todos los proyectos
+async function getAllProjectIds(req, res) {
+  try {
+    const projects = await Project.findAll({
+      attributes: ['id']
+    });
+    const projectIds = projects.map(project => project.id);
+    res.status(200).json(projectIds);
+  } catch (error) {
+    logger.error('Error getting project IDs', error);
+    res.status(500).json({ message: 'Error getting project IDs' });
+  }
+}
+module.exports = { createProject, getAllProjects, getProjectById, updateProject, deleteProject, getAllProjectIds };
