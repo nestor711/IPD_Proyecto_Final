@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import ProjectList from './components/ProjectList';
-import ProjectForm from './components/ProjectForm';
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
 import LoginRegister from './components/LoginRegister';
@@ -77,8 +76,6 @@ function App() {
           </Route>
           <PrivateRoute path="/">
             <div>
-              <h1>Project Management</h1>
-              <ProjectForm onAddProject={loadProjects} />
               <ProjectList
                 projects={projects}
                 onSelectProject={(project) => {

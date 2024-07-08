@@ -7,70 +7,70 @@ const API_URL = '/api';
 
 const LoginForm = ({ username, password, setUsername, setPassword, handleSubmit }) => (
   <form onSubmit={handleSubmit}>
-    <h1>Iniciar Sesión</h1>
+    <h1>Sign In</h1>
     <div className="social-icons">
       <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-linkedin-in"></i></a>
     </div>
-    <span>o utiliza tu nombre de usuario para ingresar</span>
+    <span>or use your username to log in</span>
     <input
       type="text"
-      placeholder="Nombre de Usuario"
+      placeholder="Username"
       value={username}
       onChange={(e) => setUsername(e.target.value)}
-      aria-label="Nombre de Usuario"
+      aria-label="Username"
       required
     />
     <input
       type="password"
-      placeholder="Contraseña"
+      placeholder="Password"
       value={password}
       onChange={(e) => setPassword(e.target.value)}
-      aria-label="Contraseña"
+      aria-label="Password"
       required
     />
-    <a href="#">¿Olvidaste tu contraseña?</a>
-    <button type="submit">Ingresar</button>
+    <a href="#">Forgot your password?</a>
+    <button type="submit">Log In</button>
   </form>
 );
 
 const RegisterForm = ({ name, username, password, setName, setUsername, setPassword, handleSubmit }) => (
   <form onSubmit={handleSubmit}>
-    <h1>Crear Cuenta</h1>
+    <h1>Create Account</h1>
     <div className="social-icons">
       <a href="#" className="icon"><i className="fa-brands fa-google-plus-g"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-facebook-f"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-github"></i></a>
       <a href="#" className="icon"><i className="fa-brands fa-linkedin-in"></i></a>
     </div>
-    <span>o utiliza tu nombre de usuario para registrarte</span>
+    <span>or use your username to sign up</span>
     <input
       type="text"
-      placeholder="Nombre"
+      placeholder="Name"
       value={name}
       onChange={(e) => setName(e.target.value)}
-      aria-label="Nombre"
+      aria-label="Name"
       required
     />
     <input
       type="text"
-      placeholder="Nombre de Usuario"
+      placeholder="Username"
       value={username}
       onChange={(e) => setUsername(e.target.value)}
-      aria-label="Nombre de Usuario"
+      aria-label="Username"
       required
     />
     <input
       type="password"
-      placeholder="Contraseña"
+      placeholder="Password"
       value={password}
       onChange={(e) => setPassword(e.target.value)}
-      aria-label="Contraseña"
+      aria-label="Password"
       required
     />
-    <button type="submit">Registrar</button>
+    <button type="submit">Sign Up</button>
   </form>
 );
 
@@ -89,12 +89,12 @@ const LoginRegister = ({ onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar datos del formulario
+    // Validate form data
     if (!username || !password || (!isLogin && !name)) {
       Swal.fire({
         icon: 'warning',
-        title: 'Formulario incompleto',
-        text: 'Por favor, llena todos los campos.'
+        title: 'Incomplete Form',
+        text: 'Please fill in all fields.'
       });
       return;
     }
@@ -110,19 +110,19 @@ const LoginRegister = ({ onLogin }) => {
         onLogin();
         resetForm();
       } else {
-        console.error('No se recibió token del servidor');
+        console.error('No token received from the server');
         Swal.fire({
           icon: 'error',
-          title: 'Error de autenticación',
-          text: 'No se pudo completar la autenticación. Por favor, intenta de nuevo.'
+          title: 'Authentication Error',
+          text: 'Unable to complete authentication. Please try again.'
         });
       }
     } catch (error) {
-      console.error(`Error ${isLogin ? 'iniciando sesión' : 'registrando'}`, error);
+      console.error(`Error ${isLogin ? 'logging in' : 'registering'}`, error);
       Swal.fire({
         icon: 'error',
-        title: `Error ${isLogin ? 'iniciando sesión' : 'registrando'}`,
-        text: error.response?.data?.message || 'Ocurrió un error. Por favor, inténtalo de nuevo.'
+        title: `Error ${isLogin ? 'logging in' : 'registering'}`,
+        text: error.response?.data?.message || 'An error occurred. Please try again.'
       });
     }
   };
@@ -152,17 +152,17 @@ const LoginRegister = ({ onLogin }) => {
       <div className="toggle-container">
         <div className="toggle">
           <div className="toggle-panel toggle-left">
-            <h1>¡Bienvenido de nuevo!</h1>
-            <p>Introduce tus datos personales para acceder a todas las funciones del sitio</p>
+            <h1>Welcome Back!</h1>
+            <p>Enter your personal details to access all site features</p>
             <button className="hidden" onClick={() => setIsLogin(true)}>
-              Iniciar Sesión
+              Log In
             </button>
           </div>
           <div className="toggle-panel toggle-right">
-            <h1>¡Hola, Amigo!</h1>
-            <p>Regístrate con tus datos personales para acceder a todas las funciones del sitio</p>
+            <h1>¡Welcome to SmartTask!</h1>
+            <p>Organize, manage, and optimize your projects and tasks with our intelligent platform.</p>
             <button className="hidden" onClick={() => setIsLogin(false)}>
-              Crear Cuenta
+              Sign Up
             </button>
           </div>
         </div>
