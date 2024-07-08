@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { deleteProject, createProject, updateProject, fetchTasks } from '../api';
-import { FaPlus, FaEye, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaPlus, FaEye, FaEdit, FaTrash, FaCalendarAlt, FaClock, FaExclamationCircle } from 'react-icons/fa';
 import ProjectForm from './ProjectForm';
 import Modal from './Modal';
 import Swal from 'sweetalert2';
@@ -89,7 +89,7 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
   return (
     <div>
       <nav style={styles.navbar}>
-        <h1 style={styles.title}>Project Management</h1>
+        <h1 style={styles.title}>SmartTask Project Manager</h1>
         <button style={styles.newProjectButton} onClick={handleNewProjectClick}>
           NEW PROJECT <FaPlus style={styles.icon} />
         </button>
@@ -101,9 +101,9 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
             <div style={styles.projectDetails}>
               <span style={styles.projectTitle}>{project.title}</span>
               <div style={styles.projectInfo}>
-                <div><strong>Created:</strong> {new Date(project.created_at).toLocaleDateString()}</div>
-                <div><strong>Culmination:</strong> {project.culmination_date}</div>
-                <div><strong>Priority:</strong> {project.priority}</div>
+                <div style={styles.infoItem}><FaCalendarAlt /> <strong>Created:</strong> {new Date(project.created_at).toLocaleDateString()}</div>
+                <div style={styles.infoItem}><FaClock /> <strong>Culmination:</strong> {new Date(project.culmination_date).toLocaleDateString()}</div>
+                <div style={styles.infoItem}><FaExclamationCircle /> <strong>Priority:</strong> {project.priority}</div>
               </div>
               <div style={styles.actions}>
                 <button style={styles.viewButton} onClick={() => handleViewTasks(project)}>
@@ -147,7 +147,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '10px 20px',
-    backgroundColor: '#512da8', // Cambiado a #512da8
+    backgroundColor: '#512da8',
     color: '#fff',
   },
   title: {
@@ -157,13 +157,13 @@ const styles = {
   newProjectButton: {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#512da8', // Cambiado a #512da8
+    backgroundColor: '#512da8',
     color: '#fff',
-    border: '1px solid #fff', // Nuevo borde blanco
-    borderRadius: '5px', // Borde redondeado
+    border: '1px solid #fff',
+    borderRadius: '5px',
     padding: '10px 20px',
     cursor: 'pointer',
-    textTransform: 'uppercase', // Texto en mayúscula
+    textTransform: 'uppercase',
   },
   icon: {
     marginLeft: '10px',
@@ -191,6 +191,12 @@ const styles = {
   },
   projectInfo: {
     marginBottom: '5px',
+  },
+  infoItem: {
+    color: '#6c757d',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '5px',
   },
   actions: {
     display: 'flex',
@@ -221,4 +227,3 @@ const styles = {
 };
 
 export default ProjectList;
-
