@@ -124,7 +124,8 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
-    height: '600px',
+    maxHeight: '80vh', // Limita la altura máxima a 80% de la altura visible
+    overflow: 'hidden', // Oculta el desbordamiento
   },
   leftColumn: {
     flex: '0 0 45%',

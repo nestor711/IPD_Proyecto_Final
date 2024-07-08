@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import taskImage from '../assets/tarea.png';
 
 const TaskForm = ({ onSubmit, initialData, onCancel }) => {
   const [taskData, setTaskData] = useState({
@@ -59,9 +58,6 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
-      <div style={styles.imageContainer}>
-        <img src={taskImage} alt="task" style={styles.image} />
-      </div>
       <div style={styles.field}>
         <label style={styles.label} htmlFor="title">Task Title</label>
         <input
