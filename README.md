@@ -71,3 +71,7 @@ Después del despliegue, la aplicación estará disponible en:
 - Locust Interface: http://localhost:8089
 
 Estos son los elementos clave que necesitas para configurar, desplegar y acceder a tu aplicación "SmartTask Project Manager" usando Docker Swarm y React/Node.js.
+
+### Nota:
+
+Se ha agregado un archivo txt llamado *Solicitudes HTTP para API*, en donde hay una guía para probar la api con la herramienta Postman.
