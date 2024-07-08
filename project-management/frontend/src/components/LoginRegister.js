@@ -159,8 +159,8 @@ const LoginRegister = ({ onLogin }) => {
             </button>
           </div>
           <div className="toggle-panel toggle-right">
-            <h1>Hello, Friend!</h1>
-            <p>Sign up with your personal details to access all site features</p>
+            <h1>¡Welcome to SmartTask!</h1>
+            <p>Organize, manage, and optimize your projects and tasks with our intelligent platform.</p>
             <button className="hidden" onClick={() => setIsLogin(false)}>
               Sign Up
             </button>

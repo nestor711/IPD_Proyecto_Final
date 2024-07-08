@@ -68,7 +68,11 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
         setProjectList(updatedProjects);
         Swal.fire('Updated!', 'Your project has been updated.', 'success');
       } else {
-        const response = await createProject(formData);
+        const now = new Date(); // Obtén la fecha actual
+        const response = await createProject({
+          ...formData,
+          created_at: now.toISOString(), // Agrega la fecha de creación
+        });
         const newProject = response.data;
         setProjectList([...projectList, newProject]);
         Swal.fire('Created!', 'Your new project has been created.', 'success');
@@ -159,7 +163,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '10px 20px',
-    backgroundColor: '#512da8',
+    backgroundColor: '#512da8', // Cambiado a #512da8
     color: '#fff',
   },
   title: {
@@ -169,13 +173,13 @@ const styles = {
   newProjectButton: {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#512da8',
+    backgroundColor: '#512da8', // Cambiado a #512da8
     color: '#fff',
-    border: '1px solid #fff',
-    borderRadius: '5px',
+    border: '1px solid #fff', // Nuevo borde blanco
+    borderRadius: '5px', // Borde redondeado
     padding: '10px 20px',
     cursor: 'pointer',
-    textTransform: 'uppercase',
+    textTransform: 'uppercase', // Texto en mayúscula
   },
   icon: {
     marginLeft: '10px',
@@ -205,10 +209,10 @@ const styles = {
     marginBottom: '5px',
   },
   infoItem: {
-    color: '#6c757d',
     display: 'flex',
     alignItems: 'center',
-    gap: '5px',
+    color: '#888', // Color gris para la información
+    marginBottom: '5px',
   },
   actions: {
     display: 'flex',
