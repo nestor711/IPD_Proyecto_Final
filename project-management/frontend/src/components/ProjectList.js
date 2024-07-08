@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { deleteProject, createProject, updateProject, fetchTasksByProjectId, fetchTasks } from '../api';
+import { deleteProject, createProject, updateProject, fetchTasksByProjectId } from '../api';
 import { FaPlus, FaEye, FaEdit, FaTrash, FaCalendarAlt, FaClock, FaExclamationCircle } from 'react-icons/fa';
 import ProjectForm from './ProjectForm';
 import Modal from './Modal';
 import Swal from 'sweetalert2';
 import TaskModal from './TaskModal';
+import taskImage from '../assets/tarea.png'; // Asegúrate de que la ruta sea correcta
 
 const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,7 +49,10 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
   };
 
   const handleEditProject = (project) => {
-    setEditProject(project);
+    setEditProject({
+      ...project,
+      culmination_date: project.culmination_date ? project.culmination_date.split('T')[0] : ''
+    });
     setIsModalOpen(true);
   };
 
@@ -68,10 +72,10 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
         setProjectList(updatedProjects);
         Swal.fire('Updated!', 'Your project has been updated.', 'success');
       } else {
-        const now = new Date(); // Obtén la fecha actual
+        const now = new Date();
         const response = await createProject({
           ...formData,
-          created_at: now.toISOString(), // Agrega la fecha de creación
+          created_at: now.toISOString(),
         });
         const newProject = response.data;
         setProjectList([...projectList, newProject]);
@@ -100,6 +104,25 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
     setTasks([]);
   };
 
+  const getPriorityStyle = (priority) => {
+    switch (priority) {
+      case 'low':
+        return { backgroundColor: 'rgba(40, 167, 69, 0.2)', padding: '3px 6px', borderRadius: '4px' };
+      case 'medium':
+        return { backgroundColor: 'rgba(255, 193, 7, 0.2)', padding: '3px 6px', borderRadius: '4px' };
+      case 'high':
+        return { backgroundColor: 'rgba(220, 53, 69, 0.2)', padding: '3px 6px', borderRadius: '4px' };
+      default:
+        return {};
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Not set';
+    const date = new Date(dateString);
+    return date instanceof Date && !isNaN(date) ? date.toLocaleDateString() : 'Invalid Date';
+  };
+
   return (
     <div>
       <nav style={styles.navbar}>
@@ -109,31 +132,47 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
         </button>
       </nav>
       
-      <ul style={styles.projectList}>
-        {projectList.map((project) => (
-          <li key={project.id} style={styles.projectItem}>
-            <div style={styles.projectDetails}>
-              <span style={styles.projectTitle}>{project.title}</span>
-              <div style={styles.projectInfo}>
-                <div style={styles.infoItem}><FaCalendarAlt /> <strong>Created:</strong> {new Date(project.created_at).toLocaleDateString()}</div>
-                <div style={styles.infoItem}><FaClock /> <strong>Culmination:</strong> {new Date(project.culmination_date).toLocaleDateString()}</div>
-                <div style={styles.infoItem}><FaExclamationCircle /> <strong>Priority:</strong> {project.priority}</div>
+      {projectList.length === 0 ? (
+        <div style={styles.noProjectsMessage}>
+          <img src={taskImage} alt="No projects" style={styles.noProjectsImage} />
+          <p>No projects available. Create a new project to get started!</p>
+        </div>
+      ) : (
+        <ul style={styles.projectList}>
+          {projectList.map((project) => (
+            <li key={project.id} style={styles.projectItem}>
+              <div style={styles.projectDetails}>
+                <span style={styles.projectTitle}>{project.title}</span>
+                <div style={styles.projectInfo}>
+                  <div style={styles.infoItem}>
+                    <FaCalendarAlt /> <strong>Created:</strong> {' '}
+                    {formatDate(project.creation_date || project.createdAt)}
+                  </div>
+                  <div style={styles.infoItem}>
+                    <FaClock /> <strong>Culmination:</strong> {' '}
+                    {formatDate(project.culmination_date)}
+                  </div>
+                  <div style={styles.infoItem}>
+                    <FaExclamationCircle /> <strong>Priority:</strong> {' '}
+                    <span style={getPriorityStyle(project.priority)}>{project.priority}</span>
+                  </div>
+                </div>
+                <div style={styles.actions}>
+                  <button style={styles.viewButton} onClick={() => handleViewTasks(project)}>
+                    <FaEye /> View Tasks
+                  </button>
+                  <button style={styles.editButton} onClick={() => handleEditProject(project)}>
+                    <FaEdit /> Edit
+                  </button>
+                  <button style={styles.deleteButton} onClick={() => handleDelete(project.id)}>
+                    <FaTrash /> Delete
+                  </button>
+                </div>
               </div>
-              <div style={styles.actions}>
-                <button style={styles.viewButton} onClick={() => handleViewTasks(project)}>
-                  <FaEye /> View Tasks
-                </button>
-                <button style={styles.editButton} onClick={() => handleEditProject(project)}>
-                  <FaEdit /> Edit
-                </button>
-                <button style={styles.deleteButton} onClick={() => handleDelete(project.id)}>
-                  <FaTrash /> Delete
-                </button>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ProjectForm
@@ -163,7 +202,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '10px 20px',
-    backgroundColor: '#512da8', // Cambiado a #512da8
+    backgroundColor: '#512da8',
     color: '#fff',
   },
   title: {
@@ -173,13 +212,13 @@ const styles = {
   newProjectButton: {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#512da8', // Cambiado a #512da8
+    backgroundColor: '#512da8',
     color: '#fff',
-    border: '1px solid #fff', // Nuevo borde blanco
-    borderRadius: '5px', // Borde redondeado
+    border: '1px solid #fff',
+    borderRadius: '5px',
     padding: '10px 20px',
     cursor: 'pointer',
-    textTransform: 'uppercase', // Texto en mayúscula
+    textTransform: 'uppercase',
   },
   icon: {
     marginLeft: '10px',
@@ -211,7 +250,7 @@ const styles = {
   infoItem: {
     display: 'flex',
     alignItems: 'center',
-    color: '#888', // Color gris para la información
+    color: '#888',
     marginBottom: '5px',
   },
   actions: {
@@ -240,8 +279,19 @@ const styles = {
     padding: '5px 10px',
     cursor: 'pointer',
   },
+  noProjectsMessage: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '50vh',
+    textAlign: 'center',
+  },
+  noProjectsImage: {
+    width: '100px',
+    height: '100px',
+    marginBottom: '20px',
+  },
 };
 
-
 export default ProjectList;
-
