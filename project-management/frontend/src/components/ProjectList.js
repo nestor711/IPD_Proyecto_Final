@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { deleteProject, createProject, updateProject, fetchTasksByProjectId } from '../api';
+import { deleteProject, createProject, updateProject, fetchTasksByProjectId, fetchTasks } from '../api';
 import { FaPlus, FaEye, FaEdit, FaTrash, FaCalendarAlt, FaClock, FaExclamationCircle } from 'react-icons/fa';
 import ProjectForm from './ProjectForm';
 import Modal from './Modal';
