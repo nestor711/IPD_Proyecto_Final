@@ -1,0 +1,18 @@
+FROM python:3.9
+
+WORKDIR /app
+
+# Actualizar pip e instalar pyzmq por separado
+RUN pip install --upgrade pip && pip install pyzmq==22.3.0
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY locustfile.py .
+COPY users.json .
+COPY projects.json .
+COPY tasks.json .
+
+EXPOSE 8089
+
+CMD ["locust", "--host", "${TARGET_HOST}"]

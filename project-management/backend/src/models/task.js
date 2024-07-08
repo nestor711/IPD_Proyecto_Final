@@ -3,13 +3,27 @@ const sequelize = require('../config/database');
 const Project = require('./project');
 
 const Task = sequelize.define('Task', {
-  name: {
-    type: DataTypes.STRING,
+  title: {
+    type: DataTypes.STRING(1000),
     allowNull: false
   },
   description: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true
+  },
+  creation_date: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW
+  },
+  completion_date: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  status: {
+    type: DataTypes.ENUM('in_progress', 'completed', 'pending', 'cancelled'),
+    allowNull: false,
+    defaultValue: 'pending' 
   },
   projectId: {
     type: DataTypes.INTEGER,

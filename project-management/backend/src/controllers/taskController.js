@@ -5,12 +5,12 @@ const logger = require('../logger');
 // Crear una nueva tarea
 async function createTask(req, res) {
   try {
-    const { name, description, projectId } = req.body;
+    const { title, description, projectId, status, completion_date } = req.body;
     const project = await Project.findByPk(projectId);
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
-    const task = await Task.create({ name, description, projectId });
+    const task = await Task.create({ title, description, projectId, status, completion_date });
     logger.info(`Task created: ${task.id}`);
     res.status(201).json(task);
   } catch (error) {
@@ -59,14 +59,15 @@ async function getTaskById(req, res) {
 async function updateTask(req, res) {
   try {
     const { id } = req.params;
-    const { name, description, completed } = req.body;
+    const { title, description, status, completion_date } = req.body;
     const task = await Task.findByPk(id);
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
-    task.name = name;
+    task.title = title;
     task.description = description;
-    task.completed = completed;
+    task.status = status;
+    task.completion_date = completion_date;
     await task.save();
     logger.info(`Task updated: ${task.id}`);
     res.status(200).json(task);
@@ -93,4 +94,17 @@ async function deleteTask(req, res) {
   }
 }
 
-module.exports = { createTask, getAllTasks, getTaskById, updateTask, deleteTask };
+// Obtener todas las tareas de un proyecto específico
+async function getTasksByProjectId(req, res) {
+  try {
+    const { projectId } = req.params;
+    const tasks = await Task.findAll({
+      where: { projectId: projectId }
+    });
+    res.status(200).json(tasks);
+  } catch (error) {
+    logger.error('Error getting tasks for project', error);
+    res.status(500).json({ message: 'Error getting tasks for project' });
+  }
+}
+module.exports = { createTask, getAllTasks, getTaskById, updateTask, deleteTask, getTasksByProjectId };
