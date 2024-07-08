@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { deleteProject, createProject, updateProject, fetchTasks } from '../api';
+import { deleteProject, createProject, updateProject, fetchTasksByProjectId } from '../api';
 import { FaPlus, FaEye, FaEdit, FaTrash, FaCalendarAlt, FaClock, FaExclamationCircle } from 'react-icons/fa';
 import ProjectForm from './ProjectForm';
 import Modal from './Modal';
 import Swal from 'sweetalert2';
-import TaskModal from './TaskModal'; // Importa el modal para tareas
+import TaskModal from './TaskModal';
 
 const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [projectList, setProjectList] = useState(projects);
   const [editProject, setEditProject] = useState(null);
-  const [selectedProject, setSelectedProject] = useState(null); // Estado para el proyecto seleccionado
-  const [tasks, setTasks] = useState([]); // Estado para las tareas del proyecto seleccionado
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     setProjectList(projects);
@@ -28,11 +28,16 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await deleteProject(projectId);
-        const updatedProjects = projectList.filter(project => project.id !== projectId);
-        setProjectList(updatedProjects);
-        Swal.fire('Deleted!', 'Your project has been deleted.', 'success');
-        onDeleteProject();
+        try {
+          await deleteProject(projectId);
+          const updatedProjects = projectList.filter(project => project.id !== projectId);
+          setProjectList(updatedProjects);
+          Swal.fire('Deleted!', 'Your project has been deleted.', 'success');
+          onDeleteProject();
+        } catch (error) {
+          console.error('Error deleting project:', error);
+          Swal.fire('Error', 'There was a problem deleting the project.', 'error');
+        }
       }
     });
   };
@@ -77,8 +82,13 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
 
   const handleViewTasks = async (project) => {
     setSelectedProject(project);
-    const response = await fetchTasks(project.id);
-    setTasks(response.data);
+    try {
+      const response = await fetchTasksByProjectId(project.id);
+      setTasks(response.data);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      Swal.fire('Error', 'There was a problem fetching tasks for this project.', 'error');
+    }
   };
 
   const handleCloseTaskModal = () => {
@@ -132,9 +142,11 @@ const ProjectList = ({ projects, onSelectProject, onDeleteProject }) => {
       {selectedProject && (
         <TaskModal
           isOpen={!!selectedProject}
-          project={selectedProject}
-          tasks={tasks}
           onClose={handleCloseTaskModal}
+          projectId={selectedProject.id}
+          onCreateTask={() => handleViewTasks(selectedProject)}
+          onUpdateTask={() => handleViewTasks(selectedProject)}
+          onDeleteTask={() => handleViewTasks(selectedProject)}
         />
       )}
     </div>
@@ -226,4 +238,6 @@ const styles = {
   },
 };
 
+
 export default ProjectList;
+

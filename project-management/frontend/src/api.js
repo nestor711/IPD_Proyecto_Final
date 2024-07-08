@@ -31,6 +31,3 @@ export const deleteTask = (taskId) => axios.delete(`${API_URL}/tasks/${taskId}`)
 export const fetchTaskById = (taskId) => axios.get(`${API_URL}/tasks/${taskId}`);
 export const updateTask = (taskId, task) => axios.put(`${API_URL}/tasks/${taskId}`, task);
 export const fetchTasksByProjectId = (projectId) => axios.get(`${API_URL}/tasks/project/${projectId}`);
-
-
-

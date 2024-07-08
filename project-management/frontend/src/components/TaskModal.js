@@ -3,16 +3,16 @@ import Swal from 'sweetalert2';
 import TaskList from './TaskList';
 import TaskForm from './TaskForm';
 import Modal from './Modal2';
-import { fetchTasks, createTask, deleteTask, updateTask } from '../api';
-import taskImage from '../assets/tarea.png'; // Importar la imagen aquí
+import { fetchTasksByProjectId, createTask, deleteTask, updateTask } from '../api';
+import taskImage from '../assets/tarea.png';
 
 const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onDeleteTask }) => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
 
   useEffect(() => {
-    if (isOpen) {
-      fetchTasks(projectId)
+    if (isOpen && projectId) {
+      fetchTasksByProjectId(projectId)
         .then(response => setTasks(response.data))
         .catch(error => console.error('Error fetching tasks:', error));
     }
@@ -25,8 +25,10 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
       const createdTask = response.data;
       setTasks([...tasks, createdTask]);
       onCreateTask();
+      Swal.fire('Created!', 'The task has been created successfully.', 'success');
     } catch (error) {
       console.error('Error creating task:', error);
+      Swal.fire('Error', 'There was a problem creating the task.', 'error');
     }
   };
 
@@ -41,8 +43,10 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
       setTasks(updatedTasks);
       onUpdateTask();
       setSelectedTask(null);
+      Swal.fire('Updated!', 'The task has been updated successfully.', 'success');
     } catch (error) {
       console.error('Error updating task:', error);
+      Swal.fire('Error', 'There was a problem updating the task.', 'error');
     }
   };
 
