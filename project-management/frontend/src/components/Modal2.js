@@ -33,9 +33,9 @@ const styles = {
     padding: '20px',
     borderRadius: '5px',
     position: 'relative',
-    maxWidth: '800px',
-    width: '100%',
-    maxHeight: '80vh',
+    maxWidth: '90%', // Aumentar el ancho máximo
+    width: '1200px', // Establecer un ancho fijo más grande
+    maxHeight: '90vh',
     overflowY: 'auto',
   },
   closeButton: {

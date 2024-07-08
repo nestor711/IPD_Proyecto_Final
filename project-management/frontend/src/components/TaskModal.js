@@ -4,6 +4,7 @@ import TaskList from './TaskList';
 import TaskForm from './TaskForm';
 import Modal from './Modal2';
 import { fetchTasks, createTask, deleteTask, updateTask } from '../api';
+import taskImage from '../assets/tarea.png'; // Importar la imagen aquí
 
 const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onDeleteTask }) => {
   const [tasks, setTasks] = useState([]);
@@ -19,9 +20,10 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
 
   const handleCreateTask = async (taskData) => {
     try {
-      const response = await createTask({ ...taskData, projectId });
-      const newTask = response.data;
-      setTasks([...tasks, newTask]);
+      const newTask = { ...taskData, projectId };
+      const response = await createTask(newTask);
+      const createdTask = response.data;
+      setTasks([...tasks, createdTask]);
       onCreateTask();
     } catch (error) {
       console.error('Error creating task:', error);
@@ -30,10 +32,11 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
 
   const handleUpdateTask = async (taskData) => {
     try {
-      const response = await updateTask(taskData.id, taskData);
-      const updatedTask = response.data;
+      const updatedTask = { ...taskData, projectId };
+      const response = await updateTask(taskData.id, updatedTask);
+      const updatedTaskFromServer = response.data;
       const updatedTasks = tasks.map(task =>
-        task.id === updatedTask.id ? updatedTask : task
+        task.id === updatedTaskFromServer.id ? updatedTaskFromServer : task
       );
       setTasks(updatedTasks);
       onUpdateTask();
@@ -98,7 +101,14 @@ const TaskModal = ({ isOpen, onClose, projectId, onCreateTask, onUpdateTask, onD
         </div>
         <div style={styles.rightColumn}>
           <h2 style={styles.title}>Task List</h2>
-          <TaskList tasks={tasks} onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />
+          {tasks.length > 0 ? (
+            <TaskList tasks={tasks} onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />
+          ) : (
+            <div style={styles.noTasksMessage}>
+              <img src={taskImage} alt="No tasks" style={styles.noTasksImage} />
+              <p>No tasks for this project</p>
+            </div>
+          )}
         </div>
       </div>
     </Modal>
@@ -109,7 +119,7 @@ const styles = {
   container: {
     display: 'flex',
     justifyContent: 'space-between',
-    width: '800px',
+    width: '100%',
     height: '600px',
   },
   leftColumn: {
@@ -122,6 +132,14 @@ const styles = {
     borderLeft: '1px solid #ccc',
     paddingLeft: '20px',
     overflowY: 'auto',
+  },
+  noTasksMessage: {
+    textAlign: 'center',
+    marginTop: '20px',
+  },
+  noTasksImage: {
+    width: '100px',
+    height: '100px',
   },
   title: {
     marginBottom: '20px',
