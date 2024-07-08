@@ -1,0 +1,131 @@
+Solicitudes HTTP con la API, usando la herramienta Postman:
+Aplicación SmartTask Project Manager
+
+Registrar usuario:
+Método POST
+URL: http://localhost:3000/api/auth/register
+Body -> raw: {
+    "username": "admin2", "password": "admin123", "name": "Juan"
+}
+
+Si la salida es correcta se debe retornar un token. 
+
+
+Loguear un usuario:
+Método POST
+URL: http://localhost:3000/api/auth/login
+Body -> raw: {
+    "username": "admin2", "password": "admin123"
+}
+
+Si la salida es correcta se debe retornar un token, es importante guardar este token, para futuras solicitudes.
+
+
+Obtener los ID’s de todos los proyectos disponibles: 
+Método GET
+URL: http://localhost:3000/api/projects/all-ids
+headers -> key: x-auth-token, value: {token del login}
+
+Si la salida es correcta se debe retornar un array con todos los id 's de los proyectos disponibles en base de datos. 
+
+
+
+Crear un proyecto:
+Método POST 
+URL: http://localhost:3000/api/projects/
+headers -> key: x-auth-token, value: {token del login}
+Body -> raw: {
+        "title": "Project 12",
+        "description": "First project",
+        "creation_date": "2024-07-08",
+        "culmination_date": "2024-07-15",
+        "priority": "high"
+    }
+Si la salida es correcta, se debe retornar todos los datos del proyecto creado. 
+
+
+Obtener todos los proyectos: 
+Método GET
+URL: http://localhost:3000/api/projects/
+headers -> key: x-auth-token, value: {token del login}
+Si la salida es correcta se debe retornar todos los proyectos con su información, que se encuentran en la base de datos. 
+
+
+Actualizar un proyecto por su ID: 
+Método PUT 
+URL: http://localhost:3000/api/projects/{id_del_proyecto} e.g. 10
+headers -> key: x-auth-token, value: {token del login}
+Body -> raw: {
+        "title": "Project 12",
+        "description": "First project Update Test",
+        "creation_date": "2024-07-08",
+        "culmination_date": "2024-07-15",
+        "priority": "high"
+    }
+Si la salida es correcta se debe retornar la información del proyecto actualizado. 
+
+
+Borrar un proyecto por su ID: 
+Método DELETE
+URL: http://localhost:3000/api/projects/{id_del_proyecto} e.g. 10
+headers -> key: x-auth-token, value: {token del login}
+Si la salida es correcta se debe retornar un código 204 haciendo referencia que el borrado fue correcto. 
+
+
+Crear una tarea: 
+Método POST
+URL: http://localhost:3000/api/tasks/
+headers -> key: x-auth-token, value: {token del login}
+Body -> raw: {
+        "title": "Task 13",
+        "description": "First task",
+        "creation_date": "2024-07-04",
+        "completion_date": null,
+        "status": "in_progress",
+        "projectId": 1
+    }
+Si la salida es correcta se debe retornar la información de la tarea creada. 
+
+
+Obtener todas las tareas en base de datos:
+Método GET
+URL: http://localhost:3000/api/tasks/
+headers -> key: x-auth-token, value: {token del login}
+Si la salida es correcta se debe retornar todas las tareas disponibles en la base de datos. 
+
+
+Obtener una tarea por su ID: 
+Método GET
+URL: http://localhost:3000/api/tasks/{id_de_tarea} e.g. 1
+headers -> key: x-auth-token, value: {token del login}
+Si la salida es correcta se debe retornar la información de la tarea seleccionada. 
+
+
+Actualizar una tarea por su ID: 
+Método PUT
+URL: http://localhost:3000/api/tasks/{id_de_tarea} e.g. 1
+headers -> key: x-auth-token, value: {token del login}
+Body -> raw: {
+    "title": "Task 1",
+    "description": "First task Update Test",
+    "creation_date": "2024-07-06",
+    "completion_date": null,
+    "status": "in_progress",
+    "projectId": 3
+}
+
+Si la salida es correcta se debe retornar la información actualizada de la tarea seleccionada. 
+
+
+Borrar una tarea por su ID: 
+Método DELETE
+URL: http://localhost:3000/api/tasks/{id_de_tarea} e.g. 1
+headers -> key: x-auth-token, value: {token del login}
+Si la salida es correcta se debe obtener un código 204, referenciando que la tarea fue borrada exitosamente. 
+
+
+Obtener las tareas de un proyecto por su ID: 
+Método GET
+URL: http://localhost:3000/api/tasks/project/{id_de_proyecto} e.g. 2
+headers -> key: x-auth-token, value: {token del login}
+Si la salida es correcta se debe retornar todas las tareas que pertenecen al proyecto seleccionado. 
