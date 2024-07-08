@@ -7,7 +7,6 @@ const ProjectForm = ({ onSubmit, onClose, initialData }) => {
   const [culminationDate, setCulminationDate] = useState('');
   const [priority, setPriority] = useState(initialData?.priority || 'medium');
 
-  // Configurar los valores iniciales si hay datos iniciales (para editar)
   useEffect(() => {
     if (initialData) {
       setTitle(initialData.title || '');
@@ -75,7 +74,10 @@ const ProjectForm = ({ onSubmit, onClose, initialData }) => {
         <div style={styles.formGroup}>
           <label style={styles.label}>Priority</label>
           <div style={styles.radioGroup}>
-            <label style={styles.radioLabel}>
+            <label
+              style={{ ...styles.radioLabel, color: '#dc3545' }} // Rojo para 'high'
+              className={priority === 'high' ? 'selected' : ''}
+            >
               <input
                 type="radio"
                 checked={priority === 'high'}
@@ -83,7 +85,10 @@ const ProjectForm = ({ onSubmit, onClose, initialData }) => {
               />
               High
             </label>
-            <label style={styles.radioLabel}>
+            <label
+              style={{ ...styles.radioLabel, color: '#ffc107' }} // Amarillo para 'medium'
+              className={priority === 'medium' ? 'selected' : ''}
+            >
               <input
                 type="radio"
                 checked={priority === 'medium'}
@@ -91,7 +96,10 @@ const ProjectForm = ({ onSubmit, onClose, initialData }) => {
               />
               Medium
             </label>
-            <label style={styles.radioLabel}>
+            <label
+              style={{ ...styles.radioLabel, color: '#28a745' }} // Verde para 'low'
+              className={priority === 'low' ? 'selected' : ''}
+            >
               <input
                 type="radio"
                 checked={priority === 'low'}
@@ -155,6 +163,7 @@ const styles = {
   radioLabel: {
     marginRight: '20px',
     fontSize: '16px',
+    fontWeight: 'bold',
   },
   buttonGroup: {
     display: 'flex',
