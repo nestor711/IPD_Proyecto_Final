@@ -43,23 +43,23 @@ Validar la alta disponibilidad proporcionada por Docker Swarm en el desarrollo y
 
   Construcción de la Imagen del Backend:
   
-  ### docker build -t project_backend -f Dockerfile.backend
+  #### docker build -t project_backend -f Dockerfile.backend
 
   Construcción de la Imagen del Frontend:
 
-  ### docker build -t project_frontend -f Dockerfile.frontend
+  #### docker build -t project_frontend -f Dockerfile.frontend
 
   Construcción de la Imagen de Locust:
   
-  ### docker build -t project_locust -f Dockerfile.locust .
+  #### docker build -t project_locust -f Dockerfile.locust .
   
 - Crear y desplegar servicios con Docker Stack
   
-  ### docker stack deploy -c docker-compose.yml taskapp
+  #### docker stack deploy -c docker-compose.yml taskapp
 
 - Verificar servicios desplegados en Docker Swarm
   
-  ### docker service ls
+  #### docker service ls
 
 ### 5. Acceso a la Aplicación
 
