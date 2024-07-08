@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import taskImage from '../assets/tarea.png';
 
 const TaskForm = ({ onSubmit, initialData, onCancel }) => {
@@ -32,7 +33,20 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validación de campos
+    if (!taskData.title || !taskData.description || !taskData.dueDate) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please fill out all fields!',
+      });
+      return;
+    }
+
     onSubmit(taskData);
+
+    // Limpiar el formulario después de enviar si no está en modo de edición
     if (!isEditing) {
       setTaskData({
         title: '',
@@ -70,6 +84,7 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
           value={taskData.description}
           onChange={handleChange}
           placeholder="Enter description"
+          required
         />
       </div>
       <div style={styles.field}>
@@ -126,6 +141,7 @@ const TaskForm = ({ onSubmit, initialData, onCancel }) => {
           name="dueDate"
           value={taskData.dueDate}
           onChange={handleChange}
+          required
         />
       </div>
       <div style={styles.actions}>
