@@ -4,11 +4,11 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
+router.get('/all-ids', getAllProjectIds);
 router.post('/', auth, createProject);
 router.get('/', getAllProjects);
 router.get('/:id', getProjectById);
 router.put('/:id', auth, updateProject);
 router.delete('/:id', auth, deleteProject);
-router.get('/all-ids', getAllProjectIds); 
 
 module.exports = router;
